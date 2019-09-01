@@ -1,8 +1,8 @@
 
-resultfiles=($infolder/*)
+resultfiles=($infolder/*.tsv)
 
 for resultfile in "${resultfiles[@]}"
 do
-    python -u measures/transform.py --log2 $testset $resultfile $outfolder/transformed-$(basename "${resultfile%.*}") # log-transform values
+    python3 measures/trsf.py --log2 $testset $resultfile $outfolder/TRSF-$(basename "${resultfile%.*}").tsv # log-transform values
 done
 

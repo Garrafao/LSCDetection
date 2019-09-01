@@ -1,8 +1,8 @@
 
-matrices=($matrixfolder/!(*@(|row2id*|id2row*|id2column*|column2id*)))
+matrices=($matrixfolder/!(*@(_rows|_columns)))
 
 for matrix in "${matrices[@]}"
 do
-    python -u measures/types.py -n $norm "${matrix%.*}" $outfolder/normalized-types-$(basename "$matrix") $testset # number of context types normalized
+    python3 measures/types.py -n $norm $testset $matrix $outfolder/NTYPE-$(basename "$matrix").tsv # number of context types normalized
 done
 

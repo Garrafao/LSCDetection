@@ -1,3 +1,3 @@
 
-python -u measures/freq.py -n $norm $corpDir $outfolder/normalized-freq-$(basename "$corpDir") $lowerBound $upperBound $testset # token frequency normalized
+python3 measures/freq.py -n $norm $testset $corpDir $outfolder/NFREQ.tsv # token frequency normalized
 

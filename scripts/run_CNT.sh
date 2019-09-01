@@ -1,5 +1,5 @@
 
 for windowSize in "${windowSizes[@]}"
 do	
-    python -u representations/count.py $windowSize $corpDir $outfolder/$(basename "$corpDir")-win$windowSize.count.sm $lowerBound $upperBound # Create count matrix
+    python3 representations/count.py $corpDir $outfolder/win$windowSize.count $windowSize # Create count matrix
 done

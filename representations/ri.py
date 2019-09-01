@@ -1,19 +1,13 @@
 import sys
 sys.path.append('./modules/')
 
-import os
-from os.path import basename
 from docopt import docopt
-from dsm import load_pkl_files, save_pkl_files
 import logging
 import time
-import codecs
 import numpy as np
-from composes.semantic_space.space import Space
-from composes.matrix.dense_matrix import DenseMatrix
-from composes.matrix.sparse_matrix import SparseMatrix
 from sklearn.random_projection import sparse_random_matrix
-from scipy.sparse import lil_matrix, csr_matrix, csc_matrix
+from scipy.sparse import csc_matrix, lil_matrix
+from utils_ import Space
 
 
 def main():
@@ -25,14 +19,14 @@ def main():
     args = docopt('''Create low-dimensional vector space by sparse random indexing from co-occurrence matrix.
 
     Usage:
-        reduce_matrix_ri.py [-l] (-s <seeds> | -a) <dim> <t> <outPath> <outPathElement> <spacePrefix>
+        reduce_matrix_ri.py [-l] (-s <seeds> | -a) <matrixPath> <outPath> <outPathElement> <dim> <t>
 
         <seeds> = number of non-zero values in each random vector
-        <dim> = number of dimensions for random vectors
-        <t> = threshold for downsampling (if t=None, no subsampling is applied)
+        <matrixPath> = path to matrix
         <outPath> = output path for reduced space 
         <outPathElement> = output path for elemental space (context vectors)
-        <spacePrefix> = path to pickled space without suffix
+        <dim> = number of dimensions for random vectors
+        <t> = threshold for downsampling (if t=None, no subsampling is applied)
 
     Options:
         -l, --len   normalize final vectors to unit length
@@ -53,99 +47,98 @@ def main():
     if is_seeds:
         seeds = int(args['<seeds>'])
     is_aut = args['--aut']
+    matrixPath = args['<matrixPath>']
+    outPath = args['<outPath>']
+    outPathElement = args['<outPathElement>']
     dim = int(args['<dim>'])
     if args['<t>']=='None':
         t = None
     else:
         t = float(args['<t>'])
-    outPath = args['<outPath>']
-    outPathElement = args['<outPathElement>']
-    spacePrefix = args['<spacePrefix>']
     
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()    
 
-    # Load input space
-    space1 = load_pkl_files(spacePrefix)
-    matrix1 = space1.get_cooccurrence_matrix()    
-
-    # Get mappings between rows/columns and words
-    id2row1 = space1.get_id2row()
-    id2column1 = space1.get_id2column()
-    column2id1 = space1.get_column2id()
+    # Load input matrix
+    space = Space(matrixPath)   
+    matrix = space.matrix
     
+    # Get mappings between rows/columns and words
+    rows = space.rows
+    id2row = space.id2row
+    row2id = space.row2id
+    columns = space.columns
+    id2column = space.id2column
+    column2id = space.column2id
+
     ## Generate ternary random vectors
     if is_seeds:
-        elementalMatrix = np.zeros((len(id2column1),dim))
+        elementalMatrix = lil_matrix((len(columns),dim))
         # Generate base vector for random vectors 
         baseVector = np.zeros(dim) # Note: Make sure that number of seeds is not greater than dimensions
-        for i in range(0,seeds/2):
+        for i in range(0,int(seeds/2)):
             baseVector[i] = 1.0
-        for i in range(seeds/2,seeds):
+        for i in range(int(seeds/2),seeds):
             baseVector[i] = -1.0
-        for i in range(len(id2column1)):
+        for i in range(len(columns)):
             np.random.shuffle(baseVector)
             elementalMatrix[i] = baseVector
     if is_aut:
-        elementalMatrix = sparse_random_matrix(dim,len(id2column1)).toarray().T
+        elementalMatrix = sparse_random_matrix(dim,len(columns)).toarray().T
 
     elementalMatrix = csc_matrix(elementalMatrix)
     # to-do: get rid of transformation into sparse matrices by initializing them as such
 
     # Initialize target vectors
-    reducedMatrix1 = np.zeros((len(id2row1),dim))    
+    reducedMatrix = np.zeros((len(rows),dim))    
 
     # Get number of total occurrences of any word
-    totalOcc = np.sum(matrix1.get_mat())
+    totalOcc = np.sum(matrix)
 
     # Define function for downsampling
     downsample = lambda f: np.sqrt(float(t)/f) if f>t else 1.0
     downsample = np.vectorize(downsample)
     
     # Get total normalized co-occurrence frequency of all contexts in space
-    context_freqs = np.array(matrix1.sum(axis=0))/totalOcc
+    context_freqs = np.array(matrix.sum(axis=0))/totalOcc
     
     #to-do: matrix multiplication is done row-wise, do this matrix-wise
     # Iterate over rows of space, find context words and update reduced matrix with low-dimensional random vectors of these context words
-    for (space,matrix,id2row,id2column,column2id,reducedMatrix) in [(space1,matrix1,id2row1,id2column1,column2id1,reducedMatrix1)]:
-        # Iterate over targets
-        for i, target in enumerate(id2row):
-            # Get co-occurrence values as matrix
-            m = space.get_row(target).get_mat()
-            # Get nonzero indexes and data
-            nonzeros = m.nonzero()
-            data = m.data            
-            # Smooth context distribution
-            pos_context_vectors = elementalMatrix[nonzeros[1]]
-            if t!=None:
-                # Apply subsampling
-                rfs = context_freqs[0,nonzeros[1]]
-                rfs = downsample(rfs)
-                data *= rfs
-            data = csc_matrix(data)
-            # Weight context vectors by occurrence frequency
-            pos_context_vectors = pos_context_vectors.multiply(data.reshape(-1,1))
-            pos_context_vectors = np.sum(pos_context_vectors, axis=0)
-            # Add up context vectors and store as row for target
-            reducedMatrix[i] = pos_context_vectors
-              
+    for i in id2row:
+        # Get co-occurrence values as matrix
+        m = matrix[i]
+        #print(m)
+        # Get nonzero indexes and data
+        nonzeros = m.nonzero()
+        #print(nonzeros)        
+        data = m.data            
+        # Smooth context distribution
+        pos_context_vectors = elementalMatrix[nonzeros[1]]
+        if t!=None:
+            # Apply subsampling
+            rfs = context_freqs[0,nonzeros[1]]
+            rfs = downsample(rfs)
+            data *= rfs
+        data = csc_matrix(data)
+        # Weight context vectors by occurrence frequency
+        pos_context_vectors = pos_context_vectors.multiply(data.reshape(-1,1))
+        pos_context_vectors = np.sum(pos_context_vectors, axis=0)
+        # Add up context vectors and store as row for target
+        reducedMatrix[i] = pos_context_vectors
+    
+    outSpace = Space(matrix=reducedMatrix, rows=rows, columns=[])
+
     if is_len:
         # L2-normalize vectors
-        l2norm1 = np.linalg.norm(reducedMatrix1, axis=1, ord=2)
-        l2norm1[l2norm1==0.0] = 1.0 # Convert 0 values to 1
-        reducedMatrix1 /= l2norm1.reshape(len(l2norm1),1)
-    
-    # Make spaces
-    reducedSpace1 = Space(DenseMatrix(reducedMatrix1), id2row1, [])
-    elementalSpace = Space(SparseMatrix(elementalMatrix), id2column1, [])
-    
-    # Save the Space objects in pickle format
-    save_pkl_files(reducedSpace1, outPath + '.ri.dm', save_in_one_file=True, save_as_w2v=True)
-    save_pkl_files(elementalSpace, outPathElement + '.sm', save_in_one_file=False)
+        outSpace.l2_normalize()
+        
+    # Save the matrices
+    outSpace.save(outPath, format='w2v')
+    Space(matrix=elementalMatrix, rows=columns, columns=[]).save(outPathElement)
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
-
+    
     
 if __name__ == '__main__':
     main()

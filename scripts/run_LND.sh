@@ -1,8 +1,8 @@
 
-matrices=($matrixfolder1/!(*@(|row2id*|id2row*|id2column*|column2id*)))
+matrices=($matrixfolder1/!(*@(_rows|_columns)))
 
 for matrix in "${matrices[@]}"
 do
-    python -u measures/lnd.py -s "${matrix%.*}" $matrixfolder2/$(basename "${matrix%.*}") 25 $outfolder/LND-$(basename "$testset")-$(basename "$matrix") $testset # local neighborhood distance
+    python3 measures/lnd.py -s $testset $matrix $matrixfolder2/$(basename "$matrix") $outfolder/LND-$(basename "$matrix").tsv 25 # local neighborhood distance
 done
 

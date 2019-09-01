@@ -7,8 +7,8 @@ do
 	do		    		
 	    for iteration in "${iterations[@]}"
 	    do
-		python -u alignment/sgns_vi.py $infolder/$(basename "$corpDir")-win$windowSize-k$k-t$t-iter$iteration.sgns.w2v $windowSize $dim $k $t 0 5 $corpDir $outfolder/$(basename "$corpDir")-win$windowSize-k$k-t$t-iter$iteration\_vi.sgns $lowerBound2 $upperBound2 # construct word2vec skip-gram embeddings with vector initialization
-		scp $infolder/$(basename "$corpDir")-win$windowSize-k$k-t$t-iter$iteration.sgns.w2v $infolder/$(basename "$corpDir")-win$windowSize-k$k-t$t-iter$iteration\_vi.sgns.w2v # copy initialization vectors as matrix for first time period
+		python3 alignment/sgns_vi.py $infolder/win$windowSize-k$k-t$t-iter$iteration.sgns $corpDir2 $outfolder2/win$windowSize-k$k-t$t-iter$iteration\_vi.sgns $windowSize $dim $k $t 0 5 # construct word2vec skip-gram embeddings with vector initialization
+		scp $infolder/win$windowSize-k$k-t$t-iter$iteration.sgns $outfolder1/win$windowSize-k$k-t$t-iter$iteration\_vi.sgns # copy initialization vectors as matrix for first time period
 	    done	    
 	done	    		
     done	

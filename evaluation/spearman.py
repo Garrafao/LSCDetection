@@ -1,11 +1,8 @@
 import sys
 sys.path.append('./modules/')
 
-import os
-import random
-import codecs
-import numpy as np
 from docopt import docopt
+import numpy as np
 from scipy.stats import spearmanr
 import logging
 import time
@@ -21,11 +18,11 @@ def main():
 
 
     Usage:
-        spearman.py <file1> <file2> <filename1> <filename2> <col1> <col2>
+        spearman.py <filePath1> <filePath2> <filename1> <filename2> <col1> <col2>
         
     Arguments:
-        <file1> = path to file1
-        <file2> = path to file2
+        <filePath1> = path to file1
+        <filePath2> = path to file2
         <filename1> = name of file1 to print
         <filename2> = name of file2 to print
         <col1> = target column in file1
@@ -36,8 +33,8 @@ def main():
         
     """)
 
-    file1 = args['<file1>']
-    file2 = args['<file2>']
+    filePath1 = args['<filePath1>']
+    filePath2 = args['<filePath2>']
     filename1 = args['<filename1>']
     filename2 = args['<filename2>']
     col1 = int(args['<col1>'])
@@ -46,19 +43,19 @@ def main():
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()    
-
+    
     # Get data
-    with codecs.open(file1, 'r', 'utf-8') as f_in:
+    with open(filePath1, 'r', encoding='utf-8') as f_in:
         data1 = np.array([float(line.strip().split('\t')[col1]) for line in f_in])
         
-    with codecs.open(file2, 'r', 'utf-8') as f_in:
+    with open(filePath2, 'r', encoding='utf-8') as f_in:
         data2 = np.array([float(line.strip().split('\t')[col2]) for line in f_in])
 
     # Check if there are non-number values    
     nan_list1 = [x for x in data1 if np.isnan(x)]   
     nan_list2 = [x for x in data2 if np.isnan(x)]
     if len(nan_list1)>0 or len(nan_list2)>0:
-        print 'nan encountered!'       
+        print('nan encountered!')      
 
     # compute correlation
     try:
@@ -67,7 +64,8 @@ def main():
         logging.info(e)
         rho, p = 'nan', 'nan'
 
-    print filename1, filename2, rho, p                 
+    print('\t'.join((filename1, filename2, str(rho), str(p))))
+              
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
 
                 

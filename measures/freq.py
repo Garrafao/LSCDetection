@@ -1,10 +1,5 @@
-import sys
-sys.path.append('./modules/')
-
-import codecs
 from collections import defaultdict
-import os
-from dsm import PathLineSentences_mod
+from gensim.models.word2vec import PathLineSentences
 from docopt import docopt
 import logging
 import time
@@ -19,70 +14,62 @@ def main():
     args = docopt("""Get frequencies from corpus.
 
     Usage:
-        freq.py [-o] [(-n <normConst>)] <corpDir> <outPath> <lowerBound> <upperBound> [<testset>]
+        freq.py [(-n <normConst>)] <testset> <corpDir> <outPath>
         
     Arguments:
        
-        <corpDir> = path to zipped corpus directory
-        <outPath> = output path for result file
-        <lowerBound> = lower bound for time period
-        <upperBound> = upper bound for time period
-        <testset> = path to tab-separated file with targets in first column
         <normConst> = normalization constant
+        <testset> = path to file with one target per line in first column
+        <corpDir> = path to corpus or corpus directory (iterates through files)
+        <outPath> = output path for result file
 
     Options:
-        -n, --nrm  normalize values by normalization constant
-
-     Note:
-         Outputs frequencies for all tokens in case no testset is provided.
+        -n --norm  normalize frequency by normalization constant
         
     """)
     
-    is_norm = args['--nrm']
+    is_norm = args['--norm']
     if is_norm:
         normConst = float(args['<normConst>'])
+    testset = args['<testset>']
     corpDir = args['<corpDir>']
     outPath = args['<outPath>']        
-    lowerBound = int(args['<lowerBound>'])
-    upperBound = int(args['<upperBound>'])
-    testset = args['<testset>']
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()
     
-             
+
+    # Get sentence iterator
+    sentences = PathLineSentences(corpDir)
+
+    # Initialize frequency dictionary
     freqs = defaultdict(int)      
 
-    sentences = PathLineSentences_mod(corpDir, lowerBound=lowerBound, upperBound=upperBound)
-
+    # Iterate over sentences and words
+    corpusSize = 0
     for sentence in sentences:
         for word in sentence:
+            corpusSize += 1
             freqs[word] = freqs[word] + 1
 
-
-    if testset!=None:
-        # Targets for which to output values.
-        with codecs.open(testset, 'r', 'utf-8') as f_in:
+    # Load targets
+    with open(testset, 'r', encoding='utf-8') as f_in:
             targets = [line.strip().split('\t')[0] for line in f_in]
-    else:
-        # Rank the lemmas
-        freqs_ranked = sorted(freqs, key=lambda x: -(freqs[x]))
-        # If no test set is provided, compute values for all tokens
-        targets = freqs_ranked       
 
-    with codecs.open(outPath + '.csv', 'w', 'utf-8') as f_out:
-        for word in targets:
-            if word in freqs:
+    # Write frequency scores
+    with open(outPath, 'w', encoding='utf-8') as f_out:
+        for target in targets:
+            if target in freqs:
                 if is_norm:
-                    freqs[word]=float(freqs[word])/normConst
-                print >> f_out, '\t'.join((word, str(float(freqs[word]))))
+                    freqs[target]=float(freqs[target])/normConst # Normalize by total corpus frequency
+                f_out.write('\t'.join((target, str(freqs[target])+'\n')))
             else:
-                print >> f_out, '\t'.join((word, 'nan'))
+                f_out.write('\t'.join((target, 'nan'+'\n')))
 
                 
-    logging.info('total number of tokens: %d' % (sentences.corpusSize))
-    logging.info('total number of types: %d' % (len(freqs.keys())))
+    logging.info('tokens: %d' % (corpusSize))
+    logging.info('types: %d' % (len(freqs.keys())))
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
     
 

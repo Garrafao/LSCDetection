@@ -1,6 +1,7 @@
 
-for resultfile in $resultfolder/*.csv
+resultfiles=($resultfolder/*.tsv)
+for resultfile in "${resultfiles[@]}"
 do
-    declare -a resultfileshort=${resultfile#$(dirname "$(dirname "$resultfile")")/}
-    python -u evaluation/spearman.py $goldscorefile $resultfile $(basename "$goldscorefile") $resultfileshort 0 1 >> $outfolder/spearman_$(basename "$resultfolder").csv # evaluate results with Spearman correlation
+    resultfileshort=${resultfile#$(dirname "$(dirname "$resultfile")")/}
+    python3 evaluation/spearman.py $goldscorefile $resultfile $(basename "$goldscorefile") $resultfileshort 0 1 >> $outfolder/spearman_scores.tsv # evaluate results with Spearman correlation
 done

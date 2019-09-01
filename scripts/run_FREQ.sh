@@ -1,3 +1,3 @@
 
-python -u measures/freq.py $corpDir $outfolder/freq-$(basename "$corpDir") $lowerBound $upperBound $testset # token frequency
+python3 measures/freq.py $testset $corpDir $outfolder/FREQ.tsv # token frequency
 

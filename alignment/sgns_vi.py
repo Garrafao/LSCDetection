@@ -1,19 +1,12 @@
 import sys
 sys.path.append('./modules/')
 
-import codecs
-from collections import defaultdict
-import os
-from os.path import basename
-import zipfile
 from docopt import docopt
 import logging
-import logging.config
 import time
 import gensim
-from gensim.models.word2vec import Word2Vec
+from gensim.models.word2vec import PathLineSentences
 from gensim.models import KeyedVectors
-from dsm import PathLineSentences_mod
 
 
 def intersection_dic(t1, t2):
@@ -34,10 +27,12 @@ def main():
     args = docopt("""Make comparable embedding vector spaces with Skip-Gram with Negative Sampling and Vector Initialization from corpus.
 
     Usage:
-        sgns_vi.py [-l] <vectorsPath> <windowSize> <dim> <k> <t> <minCount> <itera> <corpDir> <outPath> <lowerBound> <upperBound>
+        sgns_vi.py [-l] <vectorsPath> <corpDir> <outPath> <windowSize> <dim> <k> <t> <minCount> <itera>
         
     Arguments:
        
+        <corpDir> = path to corpus directory with zipped files, each sentence in form 'year\tword1 word2 word3...'
+        <outPath> = output path for vectors
         <vectorsPath> = vectors on which model should be initialized
         <windowSize> = the linear distance of context words to consider in each direction
         <dim> = dimensionality of embeddings
@@ -45,10 +40,6 @@ def main():
         <t> = threshold for subsampling
         <minCount> = number of occurrences for a word to be included in the vocabulary
         <itera> = number of iterations
-        <corpDir> = path to corpus directory with zipped files, each sentence in form 'year\tword1 word2 word3...'
-        <outPath> = output path for vectors
-        <lowerBound> = lower bound for time period
-        <upperBound> = upper bound for time period
 
     Options:
         -l, --len   normalize final vectors to unit length
@@ -60,6 +51,8 @@ def main():
     
     is_len = args['--len']
     initVectorsPath = args['<vectorsPath>'] 
+    corpDir = args['<corpDir>']
+    outPath = args['<outPath>']
     windowSize = int(args['<windowSize>'])    
     dim = int(args['<dim>'])    
     k = int(args['<k>'])
@@ -69,12 +62,7 @@ def main():
         t = float(args['<t>'])        
     minCount = int(args['<minCount>'])    
     itera = int(args['<itera>'])   
-    corpDir = args['<corpDir>']
-    outPath = args['<outPath>']
-    lowerBound = int(args['<lowerBound>'])
-    upperBound = int(args['<upperBound>'])
 
-    logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True,})
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()    
@@ -92,22 +80,23 @@ def main():
     # Initialize vocabulary
     vocab_initVectors = initVectors.vocab
 
-     # Intersect vocabulary
-    vocab_sentences_t_2 = PathLineSentences_mod(corpDir, lowerBound=lowerBound, upperBound=upperBound)
+    # Intersect vocabulary
+    vocab_sentences_t_2 = PathLineSentences(corpDir)
+    logging.getLogger('gensim').setLevel(logging.ERROR)    
     vocab_intersect = intersection_dic([[token] for token in vocab_initVectors],vocab_sentences_t_2)
     model.build_vocab(vocab_intersect)
 
     # Train
-    sentences = PathLineSentences_mod(corpDir, lowerBound=lowerBound, upperBound=upperBound)
+    sentences = PathLineSentences(corpDir)
     model.intersect_word2vec_format(initVectorsPath, lockf=1)
-    model.train(sentences, total_examples=model.corpus_count, epochs=model.iter)
+    model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
     
     if is_len:
         # L2-normalize vectors
         model.init_sims(replace=True)
 
     # Save the vectors and the model
-    model.wv.save_word2vec_format(outPath + '.w2v')
+    model.wv.save_word2vec_format(outPath)
     #model.save(outPath + '.model')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))

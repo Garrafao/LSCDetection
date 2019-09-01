@@ -1,18 +1,14 @@
 import sys
 sys.path.append('./modules/')
 
-import os
-from os.path import basename
 from docopt import docopt
-from dsm import load_pkl_files
-import codecs
-import numpy as np
-from scipy import spatial
-from composes.similarity.cos import CosSimilarity
 import logging
 import time
+from sklearn.neighbors import NearestNeighbors
+from scipy.spatial.distance import cosine as cosine_distance
+from utils_ import Space
 
-            
+
 def main():
     """
     Compute local neighborhood distance for target pairs from two vector spaces.
@@ -22,13 +18,13 @@ def main():
     args = docopt("""Compute local neighborhood distance for target pairs from two vector spaces.
 
     Usage:
-        lnd.py [(-f | -s)] <spacePrefix1> <spacePrefix2> <k> <outPath> [<testset>]
+        lnd.py [(-f | -s)] <testset> <matrixPath1> <matrixPath2> <outPath> <k>
 
-        <spacePrefix1> = path to pickled space without suffix
-        <spacePrefix2> = path to pickled space without suffix
         <testset> = path to file with tab-separated word pairs
-        <k> = parameter k (k nearest neighbors)
+        <matrixPath1> = path to matrix1
+        <matrixPath2> = path to matrix2
         <outPath> = output path for result file
+        <k> = parameter k (k nearest neighbors)
 
     Options:
         -f, --fst   write only first target in output file
@@ -38,62 +34,85 @@ def main():
     
     is_fst = args['--fst']
     is_scd = args['--scd']
-    spacePrefix1 = args['<spacePrefix1>']
-    spacePrefix2 = args['<spacePrefix2>']
     testset = args['<testset>']
+    matrixPath1 = args['<matrixPath1>']
+    matrixPath2 = args['<matrixPath2>']
     outPath = args['<outPath>']
     k = int(args['<k>'])
     
-    logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True,})
+    #logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True,})
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()    
 
-    # Load spaces
-    space1 = load_pkl_files(spacePrefix1)
-    space2 = load_pkl_files(spacePrefix2)
+    # Load matrices and rows
+    try:
+        space1 = Space(matrixPath1, format='npz')   
+    except ValueError:
+        space1 = Space(matrixPath1, format='w2v')   
+    try:
+        space2 = Space(matrixPath2, format='npz')
+    except ValueError:
+        space2 = Space(matrixPath2, format='w2v')
+        
+    matrix1 = space1.matrix
+    row2id1 = space1.row2id
+    id2row1 = space1.id2row
+    matrix2 = space2.matrix
+    row2id2 = space2.row2id
+    id2row2 = space2.id2row
     
-    if testset!=None:
-        # target vectors in first/second column are computed from space1/space2
-        with codecs.open(testset, 'r', 'utf8') as f_in:
-            targets = [(line.strip().split('\t')[0],line.strip().split('\t')[1]) for line in f_in]
-    else:
-        # If no test set is provided, compute values for all targets occurring in both spaces
-        target_intersection = set([target.decode('utf8') for target in space1.get_row2id()]).intersection([target.decode('utf8') for target in space2.get_row2id()])
-        targets = zip(target_intersection,target_intersection)
+    # Load targets
+    with open(testset, 'r', encoding='utf-8') as f_in:
+        targets = [(line.strip().split('\t')[0],line.strip().split('\t')[1]) for line in f_in]
     
+    nbrs1 = NearestNeighbors(n_neighbors=k, metric='cosine', algorithm='brute').fit(matrix1)
+    nbrs2 = NearestNeighbors(n_neighbors=k, metric='cosine', algorithm='brute').fit(matrix2)
+
     scores = {}
     neighborUnionSizes = {}
-    for i, (t1, t2) in enumerate(targets):
+    for (t1, t2) in targets:
         
         # Get nearest neighbors
         try:
-            neighbors1 = space1.get_neighbours(t1.encode('utf8'), k, CosSimilarity())
-            neighbors2 = space2.get_neighbours(t2.encode('utf8'), k, CosSimilarity()) 
+            index1 = row2id1[t1]
+            index2 = row2id2[t2]
         except KeyError:
             scores[(t1, t2)] = 'nan'
             neighborUnionSizes[(t1, t2)] = 'nan'
             continue
-               
-        neighborUnion = list(set([a for (a,b) in neighbors1+neighbors2 if (a in space1.row2id and a in space2.row2id and not a in [t1.encode('utf8'),t2.encode('utf8')])]))
-             
-        simVec1 = [space1.get_sim(t1.encode('utf8'), n, CosSimilarity()) for n in neighborUnion] 
-        simVec2 = [space2.get_sim(t2.encode('utf8'), n, CosSimilarity()) for n in neighborUnion]
+
+        v1 = matrix1[index1].toarray().flatten()
+        v2 = matrix2[index2].toarray().flatten()
+
+        distances1, indices1 = nbrs1.kneighbors(matrix1[index1])
+        distances2, indices2 = nbrs2.kneighbors(matrix2[index2])
+
+        neighbors1 = list(zip([id2row1[i] for i in indices1.flatten().tolist()], distances1.flatten().tolist()))
+        neighbors2 = list(zip([id2row2[i] for i in indices2.flatten().tolist()], distances2.flatten().tolist()))
         
+        neighborUnion = sorted(list(set([a for (a,b) in neighbors1+neighbors2 if (a in row2id1 and a in row2id2 and not a in [t1,t2])])))
+
+        # Filter out vectors with 0-length in either matrix
+        neighborUnion = [a for a in neighborUnion if (len(matrix1[row2id1[a]].data)>0 and len(matrix2[row2id2[a]].data)>0)]
+
+        simVec1 = [1.0-cosine_distance(matrix1[index1].toarray().flatten(),matrix1[row2id1[n]].toarray().flatten()) for n in neighborUnion] 
+        simVec2 = [1.0-cosine_distance(matrix2[index2].toarray().flatten(),matrix2[row2id2[n]].toarray().flatten()) for n in neighborUnion]
+            
         # Compute cosine distance of vectors
-        distance = spatial.distance.cosine(simVec1, simVec2)
+        distance = cosine_distance(simVec1, simVec2)
         scores[(t1, t2)] = distance
         neighborUnionSizes[(t1, t2)] = len(neighborUnion)
 
 
-    with codecs.open(outPath +'.csv', 'w', 'utf-8') as f_out:
+    with open(outPath, 'w', encoding='utf-8') as f_out:
         for (t1, t2) in targets:
             if is_fst: # output only first target string
-                print >> f_out, '\t'.join((t1, str(float(scores[(t1, t2)])), str(neighborUnionSizes[(t1, t2)])))
+                f_out.write('\t'.join((t1, str(scores[(t1, t2)]), str(neighborUnionSizes[(t1, t2)])+'\n')))
             elif is_scd: # output only second target string
-                print >> f_out, '\t'.join((t2, str(float(scores[(t1, t2)])), str(neighborUnionSizes[(t1, t2)])))
+                f_out.write('\t'.join((t2, str(scores[(t1, t2)]), str(neighborUnionSizes[(t1, t2)])+'\n')))
             else: # standard outputs both target strings    
-                print >> f_out, '\t'.join(('%s,%s' % (t1,t2), str(float(scores[(t1, t2)])), str(neighborUnionSizes[(t1, t2)])))
+                f_out.write('\t'.join(('%s,%s' % (t1,t2), str(scores[(t1, t2)]), str(neighborUnionSizes[(t1, t2)])+'\n')))
                 
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   

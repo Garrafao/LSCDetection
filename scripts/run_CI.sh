@@ -1,8 +1,8 @@
 
-matrices=($matrixfolder1/!(*@(row2id*|id2row*|id2column*|column2id*)))
+matrices=($matrixfolder1/!(*@(_rows|_columns)))
 
 for matrix in "${matrices[@]}" 
 do
-    python -u alignment/ci_align.py $outfolder1/$(basename "${matrix%.*}")-CI $outfolder2/$(basename "${matrix%.*}")-CI "${matrix%.*}" $matrixfolder2/$(basename "${matrix%.*}") # align matrices by column intersection
+    python3 alignment/ci_align.py $matrix $matrixfolder2/$(basename "$matrix") $outfolder1/$(basename "$matrix")-CI $outfolder2/$(basename "$matrix")-CI # align matrices by column intersection
 done
 

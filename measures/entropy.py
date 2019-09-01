@@ -1,15 +1,12 @@
 import sys
 sys.path.append('./modules/')
 
-import os
-from os.path import basename
+import numpy as np
 from docopt import docopt
-from dsm import load_pkl_files
-from scipy.stats import entropy
 import logging
 import time
-import codecs
-import numpy as np
+from utils_ import Space
+from scipy.stats import entropy
 
             
 def main():
@@ -21,11 +18,11 @@ def main():
     args = docopt("""Compute entropy for rows of targets from vector space.
 
     Usage:
-        entropy.py [-n] <spacePrefix> <outPath> [<testset>]
+        entropy.py [-n] <testset> <matrixPath> <outPath>
 
-        <spacePrefix> = path to pickled space without suffix
+        <testset> = path to file with one target per line in first column
+        <matrixPath> = path to matrix
         <outPath> = output path for result file
-        <testset> = path to file with targets in first column
         
     Options:
         -n, --nrm  normalize values by log of number of types
@@ -33,54 +30,55 @@ def main():
     """)
     
     is_norm = args['--nrm']
-    spacePrefix = args['<spacePrefix>']
-    outPath = args['<outPath>']        
     testset = args['<testset>']
+    matrixPath = args['<matrixPath>']
+    outPath = args['<outPath>']        
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
-    start_time = time.time()    
+    start_time = time.time()
 
-    space = load_pkl_files(spacePrefix)
+    # Load input matrix
+    space = Space(matrixPath)   
+    matrix = space.matrix
+    
+    # Get rows
+    row2id = space.row2id
 
-    if testset!=None:
-        # target vectors in first/second column are computed from space1/space2
-        with codecs.open(testset, 'r', 'utf-8') as f_in:
+    # Load targets
+    with open(testset, 'r', encoding='utf-8') as f_in:
             targets = [line.strip().split('\t')[0] for line in f_in]
-    else:
-        # If no test set is provided, compute values for all targets
-        targets = [target.decode('utf-8') for target in space.get_row2id()]  
     
     scores = {}
     norms = {}
-    for i, v in enumerate(targets):
-        
+    # Iterate over targets
+    for target in targets:
+
         try:
-            row = space.get_row(v.encode('utf8'))
+            row = matrix[row2id[target]]
         except KeyError:
-            scores[v] = 'nan'
-            norms[v] = 'nan'
+            scores[target] = 'nan'
+            norms[target] = 'nan'
             continue
         
         # Get all counts in row (non-zero elements)
-        counts = row.get_mat().data
+        counts = row.data
 
         # Compute entropy of row
         H = entropy(counts, base=2)      
-        scores[v] = H
+        scores[target] = H
 
         if is_norm:
             # Get number of non-zero elements in row
-            types = row.get_mat().getnnz()
-            norms[v] = np.log2(types)
-               
+            types = row.getnnz()
+            norms[target] = np.log2(types)
+            
         
-    with codecs.open(outPath+'.csv', 'w', 'utf-8') as f_out:
-        for word in targets:
+    with open(outPath, 'w', encoding='utf-8') as f_out:
+        for target in targets:
             if is_norm:
-                print >> f_out, '\t'.join((word, str(float(scores[word])/float(norms[word]))))
-            else:    
-                print >> f_out, '\t'.join((word, str(float(scores[word]))))
+                scores[target]=float(scores[target])/float(norms[target])
+            f_out.write('\t'.join((target, str(scores[target])+'\n')))
 
             
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   

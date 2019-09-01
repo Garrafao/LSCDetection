@@ -1,10 +1,10 @@
 
-matrices=($matrixfolder/!(*@(row2id*|id2row*|id2column*|column2id*)))
+matrices=($matrixfolder/!(*@(_rows|_columns)))
 
 for matrix in "${matrices[@]}"
 do
     for iteration in "${iterations[@]}"
     do		
-	python -u representations/svd.py "${matrix%.*}" $dim 0.0 $outfolder/$(basename "${matrix%.*}")-iter$iteration # reduce matrix by SVD
+	python3 representations/svd.py $matrix $outfolder/$(basename "$matrix")-iter$iteration.svd $dim 0.0 # reduce matrix by SVD
     done    
 done

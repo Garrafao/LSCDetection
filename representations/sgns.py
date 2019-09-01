@@ -1,18 +1,11 @@
 import sys
 sys.path.append('./modules/')
 
-import codecs
-from collections import defaultdict
-import os
-from os.path import basename
-import zipfile
 from docopt import docopt
 import logging
-import logging.config
 import time
 import gensim
-from dsm import PathLineSentences_mod
-
+from gensim.models.word2vec import PathLineSentences
 
 
 def main():
@@ -24,20 +17,18 @@ def main():
     args = docopt("""Make embedding vector space with Skip-Gram with Negative Sampling from corpus.
 
     Usage:
-        sgns.py [-l] <windowSize> <dim> <k> <t> <minCount> <itera> <corpDir> <outPath> <lowerBound> <upperBound>
+        sgns.py [-l] <corpDir> <outPath> <windowSize> <dim> <k> <t> <minCount> <itera>
         
     Arguments:
        
+        <corpDir> = path to corpus directory with zipped files
+        <outPath> = output path for vectors
         <windowSize> = the linear distance of context words to consider in each direction
         <dim> = dimensionality of embeddings
         <k> = number of negative samples parameter (equivalent to shifting parameter for PPMI)
         <t> = threshold for subsampling
         <minCount> = number of occurrences for a word to be included in the vocabulary
         <itera> = number of iterations
-        <corpDir> = path to corpus directory with zipped files, each sentence in form 'year\tword1 word2 word3...'
-        <outPath> = output path for vectors
-        <lowerBound> = lower bound for time period
-        <upperBound> = upper bound for time period
 
     Options:
         -l, --len   normalize final vectors to unit length
@@ -45,6 +36,8 @@ def main():
     """)
 
     is_len = args['--len']
+    corpDir = args['<corpDir>']
+    outPath = args['<outPath>']
     windowSize = int(args['<windowSize>'])    
     dim = int(args['<dim>'])    
     k = int(args['<k>'])
@@ -54,12 +47,7 @@ def main():
         t = float(args['<t>'])        
     minCount = int(args['<minCount>'])    
     itera = int(args['<itera>'])    
-    corpDir = args['<corpDir>']
-    outPath = args['<outPath>']
-    lowerBound = int(args['<lowerBound>'])
-    upperBound = int(args['<upperBound>'])
 
-    logging.config.dictConfig({'version': 1, 'disable_existing_loggers': True,})
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
     start_time = time.time()    
@@ -72,22 +60,22 @@ def main():
     							   size=dim, window=windowSize, min_count=minCount, iter=itera, workers=20)
 
     # Initialize vocabulary
-    vocab_sentences = PathLineSentences_mod(corpDir, lowerBound=lowerBound, upperBound=upperBound)
+    vocab_sentences = PathLineSentences(corpDir)
+    logging.getLogger('gensim').setLevel(logging.ERROR)    
     model.build_vocab(vocab_sentences)
 
     # Train
-    sentences = PathLineSentences_mod(corpDir, lowerBound=lowerBound, upperBound=upperBound)
-    model.train(sentences, total_examples=model.corpus_count, epochs=model.iter)
+    sentences = PathLineSentences(corpDir)
+    model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
 
     if is_len:
         # L2-normalize vectors
         model.init_sims(replace=True)
 
     # Save the vectors and the model
-    model.wv.save_word2vec_format(outPath + '.w2v')
+    model.wv.save_word2vec_format(outPath)
     #model.save(outPath + '.model')
 
-    logging.info("Corpus has size %d" % vocab_sentences.corpusSize)
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 
 

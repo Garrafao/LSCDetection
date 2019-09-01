@@ -1,8 +1,7 @@
 
-matrices=($matrixfolder/!(*@(|row2id*|id2row*|id2column*|column2id*)))
+matrices=($matrixfolder/!(*@(_rows|_columns)))
 
 for matrix in "${matrices[@]}"
 do
-    python -u measures/entropy.py -n "${matrix%.*}" $outfolder/normalized-entropies-$(basename "$matrix") $testset # entropy normalized 
+    python3 measures/entropy.py -n $testset $matrix $outfolder/NENTR-$(basename "$matrix").tsv # vector entropy
 done
-

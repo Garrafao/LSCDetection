@@ -1,7 +1,6 @@
 import sys
 sys.path.append('./modules/')
 
-import codecs
 import os
 from docopt import docopt
 import logging
@@ -9,6 +8,7 @@ import time
 import re
 import random
 import numpy as np
+from gensim.models.word2vec import PathLineSentences
 
 
 def main():
@@ -21,29 +21,21 @@ def main():
 
 
     Usage:
-        wi.py <corp1> <corp2> <lowerBound1> <upperBound1> <lowerBound2> <upperBound2> <targ> <outDir>
+        wi.py <targets> <corp1> <corp2> <outPath>
         
     Arguments:
        
-        <corp1> = first corpus
-        <corp2> = second corpus 
-        <lowerBound1> = lower bound for time period in first corpus
-        <upperBound1> = upper bound for time period in first corpus
-        <lowerBound2> = lower bound for time period in second corpus
-        <upperBound2> = upper bound for time period in second corpus
-        <targ> = target words (to substitute in one corpus)
-        <outdir> = path+filename to target corpus (2 corpora combined, with substitution)
+        <targets> = path to file with target words in first column (to substitute in one corpus)
+        <corp1> = path to first corpus directory with corpus files
+        <corp2> = path to second corpus directory
+        <outPath> = output path for word-injected corpus
 
     """)
     
+    targets = args['<targets>']
     corp1 = args['<corp1>']
     corp2 = args['<corp2>']
-    lowerBound1 = int(args['<lowerBound1>'])
-    upperBound1 = int(args['<upperBound1>'])
-    lowerBound2 = int(args['<lowerBound2>'])
-    upperBound2 = int(args['<upperBound2>'])
-    targWords = args['<targ>']
-    outFile = args['<outDir>']
+    outPath = args['<outPath>']
     
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())
@@ -51,40 +43,36 @@ def main():
 
     # get seeds words
     seedList = []
-    for line in codecs.open(targWords, "r", 'utf-8'):
+    for line in open(targets, "r", encoding='utf-8'):
         line = line.strip().split("\t")[0]
         seedList.append(line)
 
     searchPat = re.compile(r'(\b(?:%s)\b)' % '|'.join(seedList), re.UNICODE)
-    
+    lines1 = PathLineSentences(corp1)
+    lines2 = PathLineSentences(corp2)
+
     lineCt = 0
-    wFile = codecs.open("tempOutFile.txt", "w", 'utf-8')
-    for line in codecs.open(corp1, "r", 'utf-8'):
-        date = int(line.split("\t")[0])   
-        if not lowerBound1 <= date <= upperBound1: # skip every sentence which is not in timeframe
-            continue
+    wFile = open("tempOutFile.txt", "w", encoding='utf-8')
+    for line in lines1:
+        line = ' '.join(line)
         newLine = re.sub(searchPat, r"\1_", line)        
-        wFile.write(newLine)
+        wFile.write(newLine + '\n')
         lineCt +=1
-    for line in codecs.open(corp2, "r", 'utf-8'):
-        date = int(line.split("\t")[0])   
-        if not lowerBound2 <= date <= upperBound2: # skip every sentence which is not in timeframe
-            continue
-        wFile.write(line)
+    for line in lines2:
+        line = ' '.join(line)
+        wFile.write(line + '\n')
         lineCt +=1
     print("Seed words substituted. Total number of lines: %d" % (lineCt))
     indList = list(range(lineCt))
     random.shuffle(indList)
     sublists = np.array_split(indList, 5)
     
-    # make sure that you do not append at the outFile form the last iteration
-    open(outFile, 'w').close()
-    wFile = codecs.open(outFile, "a", 'utf-8')
+    wFile = open(outPath, "w", encoding='utf-8')
     for nrSub, sublist in enumerate(sublists):
         sublist = set(sublist)
         print("Processing %d part ..." % (nrSub))
         smallLineList = []
-        for nrL, line in enumerate(codecs.open("tempOutFile.txt", "r", 'utf-8')):
+        for nrL, line in enumerate(open("tempOutFile.txt", "r", encoding='utf-8')):
             if nrL in sublist:
                 smallLineList.append(line)
         random.shuffle(smallLineList)

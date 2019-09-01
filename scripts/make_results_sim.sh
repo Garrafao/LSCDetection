@@ -1,56 +1,25 @@
 ### THIS SCRIPT PRODUCES RESULTS FOR SIMILARITY MEASURES (CD, LND) ON ALL VECTOR SPACE AND ALIGNMENT TYPES EXCEPT WORD INJECTION ###
 
-## Define global parameters ##
-# Test parameters
-declare -a windowSizes=(1) # Window sizes for all models
-declare -a globalmatrixfolderprefix=matrices/test_sim # parent folder for matrices
-declare -a globalresultfolderprefix=results/test_sim # parent folder for results
-declare -a parameterfile=scripts/parameters_test.sh # corpus- and testset-specific parameter specifications
-
-# DURel parameters
-#declare -a windowSizes=(1)
-#declare -a globalmatrixfolderprefix=matrices/durel_sim
-#declare -a globalresultfolderprefix=results/durel_sim
-#declare -a parameterfile=scripts/parameters_durel.sh
-
-# SURel parameters
-#declare -a windowSizes=(1)
-#declare -a globalmatrixfolderprefix=matrices/surel_sim
-#declare -a globalresultfolderprefix=results/surel_sim
-#declare -a parameterfile=scripts/parameters_surel.sh
-
-
-# Get corpus- and testset-specific parameters
-source $parameterfile
-
-# Overwrite any specific parameters here
-declare -a ks=(1)
-declare -a ts=(None)
-declare -a iterations=(1)
-declare -a dim=5
 declare -a matrixfolder1=$globalmatrixfolder1
 declare -a matrixfolder2=$globalmatrixfolder2
 declare -a matrixfoldercomb=$globalmatrixfoldercomb
 matrixfolders=($globalmatrixfolder1 $globalmatrixfolder2)
 
 # Run model code
-lowerBound=$lowerBound1
-upperBound=$upperBound1
+corpDir=$corpDir1
 outfolder=$sgnsmatrixfolder1
 source scripts/run_SGNS.sh # Skip-Gram with Negative Sampling for first time period
-lowerBound=$lowerBound2
-upperBound=$upperBound2
+corpDir=$corpDir2
 outfolder=$sgnsmatrixfolder2
 source scripts/run_SGNS.sh # for second time period
 infolder=$sgnsmatrixfolder1
-outfolder=$sgnsmatrixfolder2
+outfolder1=$alignedmatrixfolder1
+outfolder2=$alignedmatrixfolder2
 source scripts/run_SGNS_VI.sh # Skip-Gram with Negative Sampling aligned by Vector Initialization
-lowerBound=$lowerBound1
-upperBound=$upperBound1
+corpDir=$corpDir1
 outfolder=$countmatrixfolder1
 source scripts/run_CNT.sh # Raw Count
-lowerBound=$lowerBound2
-upperBound=$upperBound2
+corpDir=$corpDir2
 outfolder=$countmatrixfolder2
 source scripts/run_CNT.sh
 matrixfolder=$countmatrixfolder1
@@ -71,6 +40,7 @@ source scripts/run_SVD.sh # SVD on PPMI matrix
 matrixfolder=$ppmimatrixfolder2
 outfolder=$svdmatrixfolder2
 source scripts/run_SVD.sh  
+
 
 # Align matrices
 outfolder1=$alignedmatrixfolder1
@@ -97,14 +67,10 @@ matrixfolder1=$svdmatrixfolder1
 matrixfolder2=$svdmatrixfolder2
 source scripts/run_OP.sh # Orthogonal Procrustes alignment for SVD
 
+
 # Measure change scores from aligned matrices
 matrixfolder1=$alignedmatrixfolder1
 matrixfolder2=$alignedmatrixfolder2
 outfolder=$resultfolder
 source scripts/run_CD.sh # Cosine Distance
 source scripts/run_LND.sh # Local Neighborhood Distance
-
-# Evaluate results
-resultfolder=$resultfolder
-outfolder=$globalresultfolder
-source scripts/run_SPR.sh # Get Spearman correlation of measure predictions with gold scores

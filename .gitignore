@@ -3,3 +3,5 @@ matrices
 results
 corpora/durel
 corpora/surel
+modules/__pycache__
+modules/*.pyc

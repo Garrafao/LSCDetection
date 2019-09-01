@@ -66,9 +66,9 @@ The scripts assume a corpus format of one sentence per line in UTF-8 encoded (op
 | SVD | `representations/svd.py` | VSM |
 | RI | `representations/ri.py` | VSM |
 | SGNS | `representations/sgns.py` | VSM |
-| SCAN | [repository](https://github.com/ColiLea/scan) | TP |
+| SCAN | [repository](https://github.com/ColiLea/scan) | TPM |
 
-Table: VSM=Vector Space Model, TP=Topic Model
+Table: VSM=Vector Space Model, TPM=Topic Model
 
 Note that SCAN takes a slightly different corpus input format than the other models.
 
@@ -94,7 +94,7 @@ Instead of WI, consider using the more advanced [Temporal Referencing](https://g
 | LND | `measures/lnd.py` | Count, PPMI, SVD, RI, SGNS |
 | JSD | - | SCAN |
 | FD | `measures/freq.py` | from corpus |
-| TD | `measures/types.py` |Count|
+| TD | `measures/typs.py` |Count|
 | HD | `measures/entropy.py` | Count |
 
 FD, TD and HD need additional applications of `measures/diff.py` and optionally `measures/trsf.py`.

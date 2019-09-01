@@ -17,7 +17,7 @@ def main():
     args = docopt("""Compute number of context types for all rows of a vector space and save their scores.
 
     Usage:
-        types.py [(-n <normConst>)] <testset> <matrixPath> <outPath>
+        typs.py [(-n <normConst>)] <testset> <matrixPath> <outPath>
 
         <normConst> = normalization constant
         <testset> = path to file with one target per line in first column

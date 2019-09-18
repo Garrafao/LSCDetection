@@ -28,7 +28,7 @@ class Space(object):
                 with open(path + '_columns', 'rb') as f:
                     columns = pickle.load(f)
             elif format=='w2v':
-                matrix_array = np.loadtxt(path, dtype=object, delimiter=' ', skiprows=1, encoding='utf-8')
+                matrix_array = np.loadtxt(path, dtype=object, comments=None, delimiter=' ', skiprows=1, encoding='utf-8')
                 matrix = matrix_array[:,1:].astype(np.float)
                 rows = list(matrix_array[:,0].flatten())
                 columns = []             

@@ -84,7 +84,7 @@ Note that SCAN takes a slightly different corpus input format than the other mod
 
 The script `alignment/map_embeddings.py` is drawn from [VecMap](https://github.com/artetxem/vecmap), where you can find instructions how to use it. Find examples of how to obtain OP, OP- and OP+ under `scripts/`.
 
-Instead of WI, consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing).
+For SRV, consider using the efficient and more powerful [TRIPY](https://github.com/Garrafao/TRIPY). Instead of WI, consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing).
 
 #### Measures
 
@@ -103,7 +103,7 @@ FD, TD and HD need additional applications of `measures/diff.py` and optionally 
 
 For better performance, RI and SRV should be run with `-a` option, instead of specifying the seed number manually.
 
-Consider the application of column mean centering to RI and SGNS embeddings before applying a change measure.
+Consider the application of column mean centering after L2-normalization to RI and SGNS embeddings before applying a change measure.
 
 Find more detailed notes on model performances and optimal parameter settings in [these papers](#bibtex).
 

@@ -19,7 +19,7 @@ def main():
     args = docopt('''Create low-dimensional vector space by sparse random indexing from co-occurrence matrix.
 
     Usage:
-        reduce_matrix_ri.py [-l] (-s <seeds> | -a) <matrixPath> <outPath> <outPathElement> <dim> <t>
+        ri.py [-l] (-s <seeds> | -a) <matrixPath> <outPath> <outPathElement> <dim> <t>
 
         <seeds> = number of non-zero values in each random vector
         <matrixPath> = path to matrix

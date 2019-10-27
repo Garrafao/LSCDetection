@@ -97,7 +97,7 @@ def main():
     model.wv.save_word2vec_format(outPath1)
     # model.save(outPath1 + '.model')
 
-    # Train on the first corpus
+    # Train on the second corpus
     model.train(sentences_t2, total_examples=model.corpus_count, epochs=model.epochs)
     if is_len:
         # L2-normalize vectors

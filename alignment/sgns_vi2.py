@@ -2,17 +2,17 @@
 Differences between sgns_vi and sgns_vi2:
 
 Introduction:
-The Skig Gram Model consist of three layers, the input layer, hidden layer and
+The Skip Gram Model consist of three layers, the input layer, hidden layer and
 output layer. Weights between the input layer and the hidden layer are stored
 in the Embedding Matrix, which is later used for getting the individual word
-embeddings by looking at only one colum of the Matrix. The Context matrix
+embeddings by looking at only one column of the Matrix. The Context matrix
 stores the weights between the hidden layer and the output layer.
 
 Differences:
 In sgns_vi for training on the second corpus only the previously
 created Embedding Matrix is loaded into the new model, so the Context matrix
 is newly initialized with random values.
-In sgns_vi2 the whole model is reused for traing on the second corpus, that
+In sgns_vi2 the whole model is reused for training on the second corpus, that
 includes the Embedding Matrix as well as the Context matrix.
 """
 

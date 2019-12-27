@@ -23,7 +23,7 @@ The usage of each script can be understood by running it with help option `-h`, 
 
 	python3 representations/count.py -h
 
-We recommend you to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.7.4. Install the required packages running `pip install -r requirements.txt`.
+We recommend you to run the scripts within a [virtual environment](https://pypi.org/project/virtualenv/) with Python 3.7.4. Install the required packages running `pip install -r requirements.txt`. (See also [error sources](#errorsources).)
 
 ### Models
 
@@ -116,7 +116,7 @@ The evaluation framework of this repository is based on the comparison of a set 
 | DURel | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/durel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) |
 | SURel | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/surel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) |
 
-You don't have to download the data manually. In `testsets/` we provide the testset versions of DURel and SURel as used in Schlechtweg et al. (2019). Additionally, we provide an evaluation pipeline, downloading the corpora and evaluating the models to the above-mentioned datasets, see [pipeline](#pipeline).
+You don't have to download the data manually. In `testsets/` we provide the testset versions of DURel and SURel as used in Schlechtweg et al. (2019). Additionally, we provide an evaluation pipeline, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
 
 #### Metrics
 
@@ -150,6 +150,10 @@ You may want to change the parameters in `scripts/parameters_durel.sh` and `scri
 ### Important Changes
 
 September 1, 2019: Python scripts were updated from Python 2 to Python 3.
+
+### Error Sources
+
+- if you are on a Windows system and get error messages like `[bash] $'\r': command not found`, consider removing trailing '\r' characters with `sed -i 's/\r$//' scripts/*.sh`
 
 BibTex
 --------

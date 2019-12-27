@@ -74,7 +74,7 @@ def main():
 
     # Save the vectors and the model
     model.wv.save_word2vec_format(outPath)
-    #model.save(outPath + '.model')
+    model.save(outPath + '.model')
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))
 

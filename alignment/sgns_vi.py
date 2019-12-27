@@ -6,14 +6,8 @@ import logging
 import time
 import gensim
 from gensim.models.word2vec import PathLineSentences
-from gensim.models import KeyedVectors
+from gensim.models import Word2Vec
 
-
-def intersection_dic(t1, t2):
-    voc_t1 = [x for xs in t1 for x in xs]
-    voc_t2 = [x for xs in t2 for x in xs]
-    intersection = list(set(voc_t1) & set(voc_t2))
-    return [[x] for x in intersection] # note: gensim wants list of iterables (i.e. list of lists)
 
 def main():
     """
@@ -27,13 +21,13 @@ def main():
     args = docopt("""Make comparable embedding vector spaces with Skip-Gram with Negative Sampling and Vector Initialization from corpus.
 
     Usage:
-        sgns_vi.py [-l] <vectorsPath> <corpDir> <outPath> <windowSize> <dim> <k> <t> <minCount> <itera>
+        sgns_vi.py [-l] <modelPath> <corpDir> <outPath> <windowSize> <dim> <k> <t> <minCount> <itera>
         
     Arguments:
        
+        <modelPath> = model for initialization
         <corpDir> = path to corpus directory with zipped files, each sentence in form 'year\tword1 word2 word3...'
         <outPath> = output path for vectors
-        <vectorsPath> = vectors on which model should be initialized
         <windowSize> = the linear distance of context words to consider in each direction
         <dim> = dimensionality of embeddings
         <k> = number of negative samples parameter (equivalent to shifting parameter for PPMI)
@@ -45,12 +39,21 @@ def main():
         -l, --len   normalize final vectors to unit length
 
     Note:
-        Initialization vectors should be non-length-normalized.
+        This script has been updated considerably compared to the version used in
+
+            Dominik Schlechtweg, Anna Hätty, Marco del Tredici, and Sabine Schulte im Walde. 2019. A Wind of Change: Detecting and Evaluating Lexical Semantic Change across Times and Domains. In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics, pages 732-746, Florence, Italy. ACL.
+
+        The Skip Gram Model consist of three layers, the input layer, hidden layer and output layer. Weights between the input layer and the hidden layer are stored in the Embedding Matrix, which is later used for getting the individual word embeddings by looking at only one column of the Matrix. The Context matrix stores the weights between the hidden layer and the output layer.
+
+        Differences:
+        In the original version for training on the second corpus only the previously created Embedding Matrix was loaded into the new model, so the Context matrix is newly initialized with random values. In the updated version the whole model is reused for training on the second corpus, that includes the Embedding Matrix as well as the Context matrix.
+
+        Additionally, vocabulary
 
     """)
     
     is_len = args['--len']
-    initVectorsPath = args['<vectorsPath>'] 
+    modelPath = args['<modelPath>'] 
     corpDir = args['<corpDir>']
     outPath = args['<outPath>']
     windowSize = int(args['<windowSize>'])    
@@ -67,28 +70,16 @@ def main():
     logging.info(__file__.upper())
     start_time = time.time()    
          
-    # Initialize model
-    model = gensim.models.Word2Vec(sg=1, # skipgram
-    							   hs=0, # negative sampling
-    							   negative=k, # number of negative samples
-    							   sample=t, # threshold for subsampling, if None, no subsampling is performed
-    							   size=dim, window=windowSize, min_count=minCount, iter=itera, workers=20)
+    # Load model
+    model = Word2Vec.load(modelPath)
     
-    # Receive vectors for initialization
-    initVectors = KeyedVectors.load_word2vec_format(initVectorsPath, binary=False)
-
-    # Initialize vocabulary
-    vocab_initVectors = initVectors.vocab
-
     # Intersect vocabulary
-    vocab_sentences_t_2 = PathLineSentences(corpDir)
+    vocab_sentences = PathLineSentences(corpDir)
     logging.getLogger('gensim').setLevel(logging.ERROR)    
-    vocab_intersect = intersection_dic([[token] for token in vocab_initVectors],vocab_sentences_t_2)
-    model.build_vocab(vocab_intersect)
+    model.build_vocab(vocab_sentences, update=True)
 
     # Train
     sentences = PathLineSentences(corpDir)
-    model.intersect_word2vec_format(initVectorsPath, lockf=1)
     model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
     
     if is_len:

@@ -5,3 +5,4 @@ corpora/durel
 corpora/surel
 modules/__pycache__
 modules/*.pyc
+update-git.sh

@@ -21,19 +21,13 @@ def main():
     args = docopt("""Make comparable embedding vector spaces with Skip-Gram with Negative Sampling and Vector Initialization from corpus.
 
     Usage:
-        sgns_vi.py [-l] <modelPath> <corpDir> <outPath> <windowSize> <dim> <k> <t> <minCount> <itera>
+        sgns_vi.py [-l] <modelPath> <corpDir> <outPath>
         
     Arguments:
        
         <modelPath> = model for initialization
         <corpDir> = path to corpus directory with zipped files, each sentence in form 'year\tword1 word2 word3...'
         <outPath> = output path for vectors
-        <windowSize> = the linear distance of context words to consider in each direction
-        <dim> = dimensionality of embeddings
-        <k> = number of negative samples parameter (equivalent to shifting parameter for PPMI)
-        <t> = threshold for subsampling
-        <minCount> = number of occurrences for a word to be included in the vocabulary
-        <itera> = number of iterations
 
     Options:
         -l, --len   normalize final vectors to unit length
@@ -48,7 +42,7 @@ def main():
         Differences:
         In the original version for training on the second corpus only the previously created Embedding Matrix was loaded into the new model, so the Context matrix is newly initialized with random values. In the updated version the whole model is reused for training on the second corpus, that includes the Embedding Matrix as well as the Context matrix.
 
-        Additionally, vocabulary
+        Additionally, the vocabulary of the two corpora are now unified, before they were intersected.
 
     """)
     
@@ -56,15 +50,6 @@ def main():
     modelPath = args['<modelPath>'] 
     corpDir = args['<corpDir>']
     outPath = args['<outPath>']
-    windowSize = int(args['<windowSize>'])    
-    dim = int(args['<dim>'])    
-    k = int(args['<k>'])
-    if args['<t>']=='None':
-        t = None
-    else:
-        t = float(args['<t>'])        
-    minCount = int(args['<minCount>'])    
-    itera = int(args['<itera>'])   
 
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     logging.info(__file__.upper())

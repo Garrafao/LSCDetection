@@ -59,53 +59,41 @@ The scripts assume a corpus format of one sentence per line in UTF-8 encoded (op
 
 #### Semantic Representations
 
-|Name | Code | Type |
-| --- | --- | --- |
-| Count | `representations/count.py` | VSM |
-| PPMI | `representations/ppmi.py` | VSM |
-| SVD | `representations/svd.py` | VSM |
-| RI | `representations/ri.py` | VSM |
-| SGNS | `representations/sgns.py` | VSM |
-| SCAN | [repository](https://github.com/ColiLea/scan) | TPM |
+|Name | Code | Type | Comment |
+| --- | --- | --- | --- |
+| Count | `representations/count.py` | VSM | |
+| PPMI | `representations/ppmi.py` | VSM | |
+| SVD | `representations/svd.py` | VSM | |
+| RI | `representations/ri.py` | VSM | - use `-a` for good performance |
+| SGNS | `representations/sgns.py` | VSM | |
+| SCAN | [repository](https://github.com/ColiLea/scan) | TPM | - different corpus input format |
 
 Table: VSM=Vector Space Model, TPM=Topic Model
 
-Note that SCAN takes a slightly different corpus input format than the other models.
-
 #### Alignment
 
-|Name | Code | Applicability |
-| --- | --- | --- |
-| CI | `alignment/ci_align.py` | Count, PPMI |
-| SRV | `alignment/srv_align.py` | RI |
-| OP | `alignment/map_embeddings.py` | SVD, RI, SGNS |
-| VI | `alignment/sgns_vi.py` | SGNS |
-| WI | `alignment/wi.py` | Count, PPMI, SVD, RI, SGNS |
-
-The script `alignment/map_embeddings.py` is drawn from [VecMap](https://github.com/artetxem/vecmap), where you can find instructions how to use it. Find examples of how to obtain OP, OP- and OP+ under `scripts/`.
-
-For SRV, consider using the efficient and more powerful [TRIPY](https://github.com/Garrafao/TRIPY). Instead of WI, consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing).
+|Name | Code | Applicability | Comment |
+| --- | --- | --- | --- |
+| CI | `alignment/ci_align.py` | Count, PPMI | |
+| SRV | `alignment/srv_align.py` | RI | - use `-a` for good performance <br> - consider using the efficient and more powerful [TRIPY](https://github.com/Garrafao/TRIPY) |
+| OP | `alignment/map_embeddings.py` | SVD, RI, SGNS | - drawn from [VecMap](https://github.com/artetxem/vecmap) <br> - for OP- and OP+ see `scripts/` |
+| VI | `alignment/sgns_vi.py` | SGNS | - updated 27/12/19 (see script for details) |
+| WI | `alignment/wi.py` | Count, PPMI, SVD, RI, SGNS | - consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing) |
 
 #### Measures
 
-|Name | Code | Applicability |
-| --- | --- | --- |
-| CD | `measures/cd.py` | Count, PPMI, SVD, RI, SGNS |
-| LND | `measures/lnd.py` | Count, PPMI, SVD, RI, SGNS |
-| JSD | - | SCAN |
-| FD | `measures/freq.py` | from corpus |
-| TD | `measures/typs.py` |Count|
-| HD | `measures/entropy.py` | Count |
-
-FD, TD and HD need additional applications of `measures/diff.py` and optionally `measures/trsf.py`.
+|Name | Code | Applicability | Comment |
+| --- | --- | --- | --- |
+| CD | `measures/cd.py` | Count, PPMI, SVD, RI, SGNS | |
+| LND | `measures/lnd.py` | Count, PPMI, SVD, RI, SGNS | |
+| JSD | - | SCAN | |
+| FD | `measures/freq.py` | from corpus | - log-transform with `measures/trsf.py` <br> - get difference with `measures/diff.py` |
+| TD | `measures/typs.py` | Count | as above |
+| HD | `measures/entropy.py` | Count | as above |
 
 ### Parameter Settings
 
-For better performance, RI and SRV should be run with `-a` option, instead of specifying the seed number manually.
-
-Consider the application of column mean centering after L2-normalization to RI and SGNS embeddings before applying a change measure.
-
-Find more detailed notes on model performances and optimal parameter settings in [these papers](#bibtex).
+Find detailed notes on model performances and optimal parameter settings in [these papers](#bibtex).
 
 ### Evaluation
 

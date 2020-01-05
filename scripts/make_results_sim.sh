@@ -74,3 +74,7 @@ matrixfolder2=$alignedmatrixfolder2
 outfolder=$resultfolder
 source scripts/run_CD.sh # Cosine Distance
 source scripts/run_LND.sh # Local Neighborhood Distance
+
+# Create random predictions as baselines
+outfolder=$resultfolder
+source scripts/run_RAND.sh

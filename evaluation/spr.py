@@ -18,7 +18,7 @@ def main():
 
 
     Usage:
-        spearman.py <filePath1> <filePath2> <filename1> <filename2> <col1> <col2>
+        spr.py <filePath1> <filePath2> <filename1> <filename2> <col1> <col2>
         
     Arguments:
         <filePath1> = path to file1
@@ -62,7 +62,7 @@ def main():
         rho, p = spearmanr(data1, data2, nan_policy='omit')
     except ValueError as e:
         logging.info(e)
-        rho, p = 'nan', 'nan'
+        rho, p = float('nan'), float('nan')
 
     print('\t'.join((filename1, filename2, str(rho), str(p))))
               

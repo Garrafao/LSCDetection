@@ -77,7 +77,7 @@ Table: VSM=Vector Space Model, TPM=Topic Model
 | CI | `alignment/ci_align.py` | Count, PPMI | |
 | SRV | `alignment/srv_align.py` | RI | - use `-a` for good performance <br> - consider using the efficient and more powerful [TRIPY](https://github.com/Garrafao/TRIPY) |
 | OP | `alignment/map_embeddings.py` | SVD, RI, SGNS | - drawn from [VecMap](https://github.com/artetxem/vecmap) <br> - for OP- and OP+ see `scripts/` |
-| VI | `alignment/sgns_vi.py` | SGNS | - updated 27/12/19 (see script for details) |
+| VI | `alignment/sgns_vi.py` | SGNS | - bug fixes 27/12/19 (see script for details) |
 | WI | `alignment/wi.py` | Count, PPMI, SVD, RI, SGNS | - consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing) |
 
 #### Measures
@@ -99,20 +99,20 @@ Find detailed notes on model performances and optimal parameter settings in [the
 
 The evaluation framework of this repository is based on the comparison of a set of target words across two corpora. Hence, models can be evaluated on a triple (dataset, corpus1, corpus2), where the dataset provides gold values for the change of target words between corpus1 and corpus2.
 
-| Dataset | Corpus 1 | Corpus 2 | Download |
-| --- | --- | --- | --- |
-| DURel | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/durel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) |
-| SURel | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/surel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) |
+| Dataset | Corpus 1 | Corpus 2 | Download | Comment |
+| --- | --- | --- | --- | --- |
+| DURel | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/durel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
+| SURel | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/surel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) | - version from Schlechtweg et al. (2019) at `testsets/surel/` |
+| SemCor LSC | SEMCOR1 | SEMCOR2 | [Dataset](https://www.ims.uni-stuttgart.de/data/lsc-simul), [Corpora](https://www.ims.uni-stuttgart.de/data/lsc-simul) | |
 
-You don't have to download the data manually. In `testsets/` we provide the testset versions of DURel and SURel as used in Schlechtweg et al. (2019). Additionally, we provide an evaluation pipeline, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
+We provide several evaluation pipelines, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
 
 #### Metrics
 
-|Name | Code | Applicability |
-| --- | --- | --- |
-| Spearman correlation | `evaluation/spearman.py` | DURel, SURel |
-
-The script `evaluation/spearman.py` outputs the Spearman correlation of the two input rankings (column 3), as well as the significance of the obtained result (column 4).
+|Name | Code | Applicability | Comment |
+| --- | --- | --- | --- |
+| Spearman correlation | `evaluation/spr.py` | DURel, SURel, SemCor LSC | - outputs rho (column 3) and p-value (column 4) |
+| Average Precision | `evaluation/ap.py` | SemCor LSC | - outputs AP (column 3) and random baseline (column 4) |
 
 Consider uploading your results for DURel as a submission to the shared task [Lexical Semantic Change Detection in German](https://codalab.lri.fr/competitions/560).
 
@@ -128,16 +128,18 @@ Then run
 
 The script first reads the two gzipped test corpora `corpora/test/corpus1/` and `corpora/test/corpus2/`. Then it produces model predictions for the targets in `testsets/test/targets.tsv` and writes them under `results/`. It finally writes the Spearman correlation between each model's predictions and the gold rank (`testsets/test/gold.tsv`) under the respective folder in `results/`. Note that the gold values for the test data are meaningless, as they were randomly assigned.
 
-We also provide scripts to reproduce the results from Schlechtweg et al. (2019), including the corpus download. For this run either of
+We also provide a script for each dataset running all the models on it including necessary downloads. For this run either of 
 
 	bash -e scripts/run_durel.sh
 	bash -e scripts/run_surel.sh
+	bash -e scripts/run_semcor.sh
 
-You may want to change the parameters in `scripts/parameters_durel.sh` and `scripts/parameters_surel.sh` (e.g. vector dimensionality, iterations), as running the scripts on the full parameter set will take several days and require a large amount of disk space.
+As is the scripts will reproduce the results from Schlechtweg et al. (2019) and Schlechtweg & Schulte im Walde (2020). You may want to change the parameters in `scripts/parameters_durel.sh`, etc. (e.g. vector dimensionality, iterations), as running the scripts on the full parameter set may take several days and require a large amount of disk space.
 
 ### Important Changes
 
 September 1, 2019: Python scripts were updated from Python 2 to Python 3.
+December 27, 2019: bug fixes in `alignment/sgns_vi.py` (see script for details)
 
 ### Error Sources
 
@@ -156,5 +158,15 @@ BibTex
 	publisher =  {Association for Computational Linguistics},
 	pages     = {732--746}
 }
+```
+```	
+@inproceedings{SchlechtwegWalde20,
+	author = {Dominik Schlechtweg and Sabine {Schulte im Walde}},
+	booktitle = {{The Evolution of Language: Proceedings of the 13th International Conference (EVOLANGXIII)}},
+	editor = {C. Cuskley and M. Flaherty and H. Little and Luke McCrohon and A. Ravignani and T. Verhoef},
+	title = {{Simulating Lexical Semantic Change from Sense-Annotated Data}},
+	year = {2020}
+}
+	
 ```
 

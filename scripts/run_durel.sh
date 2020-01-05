@@ -6,12 +6,12 @@ wget https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc/dta19.tx
 
 ## Define global parameters ##
 # DURel parameters
-declare -a parameterfile=scripts/parameters_durel.sh # corpus- and testset-specific parameter specifications
+parameterfile=scripts/parameters_durel.sh # corpus- and testset-specific parameter specifications
 
 ## Get predictions from models ##
 # All models with similarity measures
-declare -a globalmatrixfolderprefix=matrices/durel_sim # parent folder for matrices
-declare -a globalresultfolderprefix=results/durel_sim # parent folder for results
+globalmatrixfolderprefix=matrices/durel_sim # parent folder for matrices
+globalresultfolderprefix=results/durel_sim # parent folder for results
 source $parameterfile # get corpus- and testset-specific parameters
 source scripts/make_results_sim.sh
 # Evaluate results
@@ -20,8 +20,8 @@ outfolder=$globalresultfolder
 source scripts/run_SPR.sh # Get Spearman correlation of measure predictions with gold scores
 
 # All models with dispersion measures
-declare -a globalmatrixfolderprefix=matrices/durel_disp # parent folder for matrices
-declare -a globalresultfolderprefix=results/durel_disp # parent folder for results
+globalmatrixfolderprefix=matrices/durel_disp # parent folder for matrices
+globalresultfolderprefix=results/durel_disp # parent folder for results
 source $parameterfile # get corpus- and testset-specific parameters
 source scripts/make_results_disp.sh
 # Evaluate results
@@ -30,8 +30,8 @@ outfolder=$globalresultfolder
 source scripts/run_SPR.sh # Get Spearman correlation of measure predictions with gold scores
 
 # All models with word injection
-declare -a globalmatrixfolderprefix=matrices/durel_wi # parent folder for matrices
-declare -a globalresultfolderprefix=results/durel_wi # parent folder for results
+globalmatrixfolderprefix=matrices/durel_wi # parent folder for matrices
+globalresultfolderprefix=results/durel_wi # parent folder for results
 source $parameterfile # get corpus- and testset-specific parameters
 
 ## Make word-injected corpus ##

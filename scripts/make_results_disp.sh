@@ -79,3 +79,7 @@ infolder1=$entropyresultfolder1
 infolder2=$entropyresultfolder2
 outfolder=$resultfolder
 source scripts/run_DIFF.sh # Subtract entropy (Entropy Difference)
+
+# Create random predictions as baselines
+outfolder=$resultfolder
+source scripts/run_RAND.sh

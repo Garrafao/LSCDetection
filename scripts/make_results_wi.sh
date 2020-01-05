@@ -22,7 +22,6 @@ source scripts/run_PPMI.sh # PPMI
 matrixfolder=$ppmimatrixfolderwi
 outfolder=$svdmatrixfolderwi
 source scripts/run_SVD.sh # SVD
-
 # Get Predictions
 for matrixfolder in "${matrixfolders[@]}"
 do
@@ -33,3 +32,7 @@ do
     source scripts/run_CD.sh # Cosine Distance
     source scripts/run_LND.sh # Local Neighborhood Distance
 done
+
+# Create random predictions as baselines
+outfolder=$resultfolder
+source scripts/run_RAND.sh

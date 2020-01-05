@@ -1,5 +1,5 @@
 
-matrices=($matrixfolder/!(*@(_rows|_columns|.model)))
+matrices=($matrixfolder/!(*@(_rows|_columns|.model*)))
 
 for matrix in "${matrices[@]}"
 do
@@ -7,7 +7,10 @@ do
     do
 	for t in "${ts[@]}"
 	do
-	    python3 representations/ri.py -s 2 $matrix $outfolder/$(basename "$matrix")-t$t-iter$iteration.ri $outfolder/$(basename "$matrix")-t$t-iter$iteration.ri-elemental-space $dim $t # reduce matrix by random indexing	    
+	    for dim in "${dims[@]}"
+	    do
+		python3 representations/ri.py -s 2 $matrix $outfolder/$(basename "$matrix")-t$t-dim$dim-iter$iteration.ri $outfolder/$(basename "$matrix")-t$t-dim$dim-iter$iteration.ri-elemental-space $dim $t # reduce matrix by random indexing	    
+	    done    
 	done    
     done    
 done

@@ -1,5 +1,5 @@
 
-matrices=($matrixfolder/!(*@(_rows|_columns|.model)))
+matrices=($matrixfolder/!(*@(_rows|_columns|.model*)))
 
 for matrix in "${matrices[@]}"
 do

@@ -1,5 +1,5 @@
 
-matrices=($matrixfolder1/!(*@(_rows|_columns|.model)))
+matrices=($matrixfolder1/!(*@(_rows|_columns|.model*)))
 
 for matrix in "${matrices[@]}"
 do
@@ -7,7 +7,10 @@ do
     do
 	for t in "${ts[@]}"
 	do
-	    python3 alignment/srv_align.py -s 2 $matrix $matrixfolder2/$(basename "$matrix") $outfolder1/$(basename "$matrix")-t$t-iter$iteration-SRV $outfolder2/$(basename "$matrix")-t$t-iter$iteration-SRV $outfolder1/$(basename "$matrix")-t$t-iter$iteration-elemental-space $dim $t # construct random indexing matrices from count matrices with shared random vectors
+	    for dim in "${dims[@]}"
+	    do
+		python3 alignment/srv_align.py -s 2 $matrix $matrixfolder2/$(basename "$matrix") $outfolder1/$(basename "$matrix")-t$t-dim$dim-iter$iteration-SRV $outfolder2/$(basename "$matrix")-t$t-dim$dim-iter$iteration-SRV $outfolder1/$(basename "$matrix")-t$t-dim$dim-iter$iteration-elemental-space $dim $t # construct random indexing matrices from count matrices with shared random vectors
+	    done    
 	done
     done
 done

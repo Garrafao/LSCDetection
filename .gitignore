@@ -3,6 +3,12 @@ matrices
 results
 corpora/durel
 corpora/surel
+corpora/semcor_lsc
+testsets/semcor_lsc
 modules/__pycache__
 modules/*.pyc
 update-git.sh
+evaluation/average_results.py
+evaluation/average_results.sh
+evaluation/average_results1.py
+evaluation/average_results1.sh

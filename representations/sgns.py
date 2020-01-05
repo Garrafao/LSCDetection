@@ -57,7 +57,7 @@ def main():
     							   hs=0, # negative sampling
     							   negative=k, # number of negative samples
     							   sample=t, # threshold for subsampling, if None, no subsampling is performed
-    							   size=dim, window=windowSize, min_count=minCount, iter=itera, workers=20)
+    							   size=dim, window=windowSize, min_count=minCount, iter=itera, workers=40)
 
     # Initialize vocabulary
     vocab_sentences = PathLineSentences(corpDir)

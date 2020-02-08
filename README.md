@@ -101,8 +101,8 @@ The evaluation framework of this repository is based on the comparison of a set 
 
 | Dataset | Corpus 1 | Corpus 2 | Download | Comment |
 | --- | --- | --- | --- | --- |
-| DURel | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/durel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
-| SURel | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/forschung/ressourcen/experiment-daten/surel.html), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc.html) | - version from Schlechtweg et al. (2019) at `testsets/surel/` |
+| DURel | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/data/durel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
+| SURel | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/data/surel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/surel/` |
 | SemCor LSC | SEMCOR1 | SEMCOR2 | [Dataset](https://www.ims.uni-stuttgart.de/data/lsc-simul), [Corpora](https://www.ims.uni-stuttgart.de/data/lsc-simul) | |
 
 We provide several evaluation pipelines, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
@@ -138,8 +138,8 @@ As is the scripts will reproduce the results from Schlechtweg et al. (2019) and 
 
 ### Important Changes
 
-September 1, 2019: Python scripts were updated from Python 2 to Python 3.
-December 27, 2019: bug fixes in `alignment/sgns_vi.py` (see script for details)
+- September 1, 2019: Python scripts were updated from Python 2 to Python 3.
+- December 27, 2019: bug fixes in `alignment/sgns_vi.py` (see script for details)
 
 ### Error Sources
 
@@ -161,12 +161,11 @@ BibTex
 ```
 ```	
 @inproceedings{SchlechtwegWalde20,
+	title = {{Simulating Lexical Semantic Change from Sense-Annotated Data}},
 	author = {Dominik Schlechtweg and Sabine {Schulte im Walde}},
+	year = {2020}
 	booktitle = {{The Evolution of Language: Proceedings of the 13th International Conference (EVOLANGXIII)}},
 	editor = {C. Cuskley and M. Flaherty and H. Little and Luke McCrohon and A. Ravignani and T. Verhoef},
-	title = {{Simulating Lexical Semantic Change from Sense-Annotated Data}},
-	year = {2020}
+	publisher = {Online at {}},
 }
-	
 ```
-

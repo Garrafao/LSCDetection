@@ -6,12 +6,14 @@ declare -a matrixfoldercomb=$globalmatrixfoldercomb
 matrixfolders=($globalmatrixfolder1 $globalmatrixfolder2)
 
 # Run model code
+: '
 corpDir=$corpDir1
 outfolder=$sgnsmatrixfolder1
 source scripts/run_SGNS.sh # Skip-Gram with Negative Sampling for first time period
 corpDir=$corpDir2
 outfolder=$sgnsmatrixfolder2
 source scripts/run_SGNS.sh # for second time period
+'
 infolder=$sgnsmatrixfolder1
 outfolder1=$alignedmatrixfolder1
 outfolder2=$alignedmatrixfolder2

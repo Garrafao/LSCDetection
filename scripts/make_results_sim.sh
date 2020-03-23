@@ -39,8 +39,7 @@ outfolder=$svdmatrixfolder1
 source scripts/run_SVD.sh # SVD on PPMI matrix
 matrixfolder=$ppmimatrixfolder2
 outfolder=$svdmatrixfolder2
-source scripts/run_SVD.sh  
-
+source scripts/run_SVD.sh
 
 # Align matrices
 outfolder1=$alignedmatrixfolder1
@@ -49,8 +48,8 @@ outfolder2=$alignedmatrixfolder2
 matrixfolder1=$countmatrixfolder1
 matrixfolder2=$countmatrixfolder2
 source scripts/run_CI.sh # Column Intersection alignment of count matrices
-matrixfolder1=$countmatrixfolder1
-matrixfolder2=$countmatrixfolder2
+matrixfolder1=$alignedmatrixfolder1
+matrixfolder2=$alignedmatrixfolder2
 source scripts/run_SRV.sh # Shared Random Vector alignment
 
 # Align matrices

@@ -26,7 +26,7 @@ def main():
     Arguments:
        
         <modelPath> = model for initialization
-        <corpDir> = path to corpus directory with zipped files, each sentence in form 'year\tword1 word2 word3...'
+        <corpDir> = path to corpus directory with zipped files
         <outPath> = output path for vectors
 
     Options:
@@ -58,7 +58,7 @@ def main():
     # Load model
     model = Word2Vec.load(modelPath)
     
-    # Intersect vocabulary
+    # Build vocabulary
     vocab_sentences = PathLineSentences(corpDir)
     logging.getLogger('gensim').setLevel(logging.ERROR)    
     model.build_vocab(vocab_sentences, update=True)

@@ -5,14 +5,10 @@ for matrix in "${matrices[@]}"
 do
     for iteration in "${iterations[@]}"
     do
-	for t in "${ts[@]}"
+	for dim in "${dims[@]}"
 	do
-	    for dim in "${dims[@]}"
-	    do
-		python3 representations/ri.py -s 2 $matrix $outfolder/$(basename "$matrix")-t$t-dim$dim-iter$iteration.ri $outfolder/$(basename "$matrix")-t$t-dim$dim-iter$iteration.ri-elemental-space $dim $t # reduce matrix by random indexing	    
-	    done    
+	    python3 representations/ri.py $matrix $outfolder/$(basename "$matrix")-dim$dim-iter$iteration.ri $dim # reduce matrix by random indexing	    
 	done    
     done    
 done
 
-rm $outfolder/*elemental-space* # delete random vectors after constructing the matrix

@@ -64,7 +64,7 @@ The scripts assume a corpus format of one sentence per line in UTF-8 encoded (op
 | Count | `representations/count.py` | VSM | |
 | PPMI | `representations/ppmi.py` | VSM | |
 | SVD | `representations/svd.py` | VSM | |
-| RI | `representations/ri.py` | VSM | - use `-a` for good performance |
+| RI | `representations/ri.py` | VSM |  |
 | SGNS | `representations/sgns.py` | VSM | |
 | SCAN | [repository](https://github.com/ColiLea/scan) | TPM | - different corpus input format |
 
@@ -75,7 +75,7 @@ Table: VSM=Vector Space Model, TPM=Topic Model
 |Name | Code | Applicability | Comment |
 | --- | --- | --- | --- |
 | CI | `alignment/ci_align.py` | Count, PPMI | |
-| SRV | `alignment/srv_align.py` | RI | - use `-a` for good performance <br> - consider using the efficient and more powerful [TRIPY](https://github.com/Garrafao/TRIPY) |
+| SRV | `alignment/srv_align.py` | RI | - consider using more powerful [TRIPY](https://github.com/Garrafao/TRIPY) |
 | OP | `alignment/map_embeddings.py` | SVD, RI, SGNS | - drawn from [VecMap](https://github.com/artetxem/vecmap) <br> - for OP- and OP+ see `scripts/` |
 | VI | `alignment/sgns_vi.py` | SGNS | - bug fixes 27/12/19 (see script for details) |
 | WI | `alignment/wi.py` | Count, PPMI, SVD, RI, SGNS | - consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing) |
@@ -99,11 +99,11 @@ Find detailed notes on model performances and optimal parameter settings in [the
 
 The evaluation framework of this repository is based on the comparison of a set of target words across two corpora. Hence, models can be evaluated on a triple (dataset, corpus1, corpus2), where the dataset provides gold values for the change of target words between corpus1 and corpus2.
 
-| Dataset | Corpus 1 | Corpus 2 | Download | Comment |
-| --- | --- | --- | --- | --- |
-| DURel | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/data/durel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
-| SURel | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/data/surel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/surel/` |
-| SemCor LSC | SEMCOR1 | SEMCOR2 | [Dataset](https://www.ims.uni-stuttgart.de/data/lsc-simul), [Corpora](https://www.ims.uni-stuttgart.de/data/lsc-simul) | |
+| Dataset | Language | Corpus 1 | Corpus 2 | Download | Comment |
+| --- | --- | --- | --- | --- | --- |
+| DURel | German | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/data/durel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
+| SURel | German | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/data/surel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/surel/` |
+| SemCor LSC | English | SEMCOR1 | SEMCOR2 | [Dataset](https://www.ims.uni-stuttgart.de/data/lsc-simul), [Corpora](https://www.ims.uni-stuttgart.de/data/lsc-simul) | |
 
 We provide several evaluation pipelines, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
 
@@ -140,6 +140,7 @@ As is the scripts will reproduce the results from Schlechtweg et al. (2019) and 
 
 - September 1, 2019: Python scripts were updated from Python 2 to Python 3.
 - December 27, 2019: bug fixes in `alignment/sgns_vi.py` (see script for details)
+- March 23, 2020: updates in `representations/ri.py` and `alignment/srv_align.py` (see scripts for details)
 
 ### Error Sources
 
@@ -153,10 +154,11 @@ BibTex
 	title = {{A Wind of Change: Detecting and Evaluating Lexical Semantic Change across Times and Domains}},
 	author = {Dominik Schlechtweg and Anna H\"{a}tty and Marco del Tredici and Sabine {Schulte im Walde}},
     booktitle = {Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics},
-	year =  {2019},
-	address =  {Florence, Italy},
-	publisher =  {Association for Computational Linguistics},
-	pages     = {732--746}
+	year = {2019},
+	address = {Florence, Italy},
+	publisher = {Association for Computational Linguistics},
+	pages = {732--746},
+    doi = {10.18653/v1/P19-1072}
 }
 ```
 ```	
@@ -164,8 +166,9 @@ BibTex
 	title = {{Simulating Lexical Semantic Change from Sense-Annotated Data}},
 	author = {Dominik Schlechtweg and Sabine {Schulte im Walde}},
 	year = {2020}
-	booktitle = {{The Evolution of Language: Proceedings of the 13th International Conference (EVOLANGXIII)}},
-	editor = {C. Cuskley and M. Flaherty and H. Little and Luke McCrohon and A. Ravignani and T. Verhoef},
-	publisher = {Online at {}},
+	booktitle = {{The Evolution of Language: Proceedings of the 13th International Conference (EvoLang13)}},
+	editor = {Ravignani, A. and Barbieri, C. and Martins, M. and Flaherty, M. and Jadoul, Y. and Lattenkamp, E. and Little, H. and Mudd, K. and Verhoef, T.},
+	url = {http://brussels.evolang.org/proceedings/paper.html?nr=9},
+	doi = {10.17617/2.3190925}
 }
 ```

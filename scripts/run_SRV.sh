@@ -3,16 +3,15 @@ matrices=($matrixfolder1/!(*@(_rows|_columns|.model*)))
 
 for matrix in "${matrices[@]}"
 do
+    if ! [[ $matrix == *count-CI ]]; then
+	continue
+    fi
     for iteration in "${iterations[@]}"
     do
-	for t in "${ts[@]}"
+	for dim in "${dims[@]}"
 	do
-	    for dim in "${dims[@]}"
-	    do
-		python3 alignment/srv_align.py -s 2 $matrix $matrixfolder2/$(basename "$matrix") $outfolder1/$(basename "$matrix")-t$t-dim$dim-iter$iteration-SRV $outfolder2/$(basename "$matrix")-t$t-dim$dim-iter$iteration-SRV $outfolder1/$(basename "$matrix")-t$t-dim$dim-iter$iteration-elemental-space $dim $t # construct random indexing matrices from count matrices with shared random vectors
-	    done    
-	done
+	    python3 alignment/srv_align.py $matrix $matrixfolder2/$(basename "$matrix") $outfolder1/$(basename "$matrix")-dim$dim-iter$iteration-SRV $outfolder2/$(basename "$matrix")-dim$dim-iter$iteration-SRV $dim # construct random indexing matrices from count matrices with shared random vectors
+	done    
     done
 done
 
-rm $outfolder1/*elemental-space* # delete the shared random vectors after constructing the matrices

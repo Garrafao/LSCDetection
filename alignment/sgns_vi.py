@@ -57,7 +57,6 @@ def main():
          
     # Load model
     model = Word2Vec.load(modelPath)
-    print(model.corpus_count)
     
     # Build vocabulary
     vocab_sentences = PathLineSentences(corpDir)

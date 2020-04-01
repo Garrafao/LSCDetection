@@ -1,4 +1,22 @@
 # LSCDetection
+
+  * [General](#general)
+  * [Usage](#usage)
+  * [Models](#models)
+    + [Semantic Representations](#semantic-representations)
+    + [Alignment](#alignment)
+    + [Measures](#measures)
+  * [Parameter Settings](#parameter-settings)
+  * [Evaluation](#evaluation)
+    + [Metrics](#metrics)
+    + [Pipeline](#pipeline)
+  * [Important Changes](#important-changes)
+  * [Error Sources](#error-sources)
+- [BibTex](#bibtex)
+
+
+### General
+
 Data Sets and Models for Evaluation of Lexical Semantic Change Detection.
 
 If you use this software for academic research, please [cite](#bibtex) this paper:
@@ -8,6 +26,7 @@ If you use this software for academic research, please [cite](#bibtex) this pape
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
 Parts of the code rely on [DISSECT](https://github.com/composes-toolkit/dissect), [gensim](https://github.com/rare-technologies/gensim), [numpy](https://pypi.org/project/numpy/), [scikit-learn](https://pypi.org/project/scikit-learn/), [scipy](https://pypi.org/project/scipy/), [VecMap](https://github.com/artetxem/vecmap).
+
 
 ### Usage
 
@@ -104,6 +123,10 @@ The evaluation framework of this repository is based on the comparison of a set 
 | DURel | German | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/data/durel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
 | SURel | German | SDEWAC | COOK | [Dataset](https://www.ims.uni-stuttgart.de/data/surel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/surel/` |
 | SemCor LSC | English | SEMCOR1 | SEMCOR2 | [Dataset](https://www.ims.uni-stuttgart.de/data/lsc-simul), [Corpora](https://www.ims.uni-stuttgart.de/data/lsc-simul) | |
+| SemEval Eng | English | CCOHA 1810-1860 | CCOHA 1960-2010 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
+| SemEval Ger | German | DTA 1800-1899 | BZND 1946-1990 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
+| SemEval Lat | Latin | LatinISE -200-0 | LatinISE 0-2000 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
+| SemEval Swe | Swedish | Kubhist2 1790-1830 | Kubhist2 1895-1903 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 
 We provide several evaluation pipelines, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
 

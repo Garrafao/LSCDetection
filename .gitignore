@@ -3,8 +3,10 @@ matrices
 results
 corpora/durel
 corpora/surel
+corpora/semeval2020*
 corpora/semcor_lsc
 testsets/semcor_lsc
+testsets/semeval2020*
 modules/__pycache__
 modules/*.pyc
 update-git.sh

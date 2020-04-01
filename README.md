@@ -8,11 +8,12 @@
     + [Measures](#measures)
   * [Parameter Settings](#parameter-settings)
   * [Evaluation](#evaluation)
+    + [Datasets](#datasets)
     + [Metrics](#metrics)
-    + [Pipeline](#pipeline)
+    + [Pipelines](#pipeline)
   * [Important Changes](#important-changes)
   * [Error Sources](#error-sources)
-- [BibTex](#bibtex)
+  * [BibTex](#bibtex)
 
 
 ### General
@@ -130,7 +131,7 @@ The evaluation framework of this repository is based on the comparison of a set 
 | SemEval Lat | Latin | LatinISE -200-0 | LatinISE 0-2000 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 | SemEval Swe | Swedish | Kubhist2 1790-1830 | Kubhist2 1895-1903 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 
-We provide several evaluation pipelines, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipeline](#pipeline).
+We provide several evaluation pipelines, downloading the corpora and evaluating the models on the above-mentioned datasets, see [pipelines](#pipelines).
 
 #### Metrics
 
@@ -141,7 +142,7 @@ We provide several evaluation pipelines, downloading the corpora and evaluating 
 
 Consider uploading your results for DURel as a submission to the shared task [Lexical Semantic Change Detection in German](https://codalab.lri.fr/competitions/560) and for SemEval* to [SemEval 2020 Task 1: Unsupervised Lexical Semantic Change Detection ](https://languagechange.org/semeval).
 
-#### Pipeline
+#### Pipelines
 
 Under `scripts/` you find an example of a full evaluation pipeline for the models on two small test corpora. Assuming you are working on a UNIX-based system, first make the scripts executable with
 
@@ -160,7 +161,7 @@ We also provide a script for each dataset running all the models on it including
 	bash -e scripts/run_semcor.sh
 	bash -e scripts/run_semeval*.sh
 
-You may want to change the parameters e.g. in `scripts/parameters_durel.sh`, etc. (e.g. vector dimensionality, iterations), as running the scripts on the full parameter set may take several days and require a large amount of disk space.
+You may want to change the parameters in `scripts/parameters_durel.sh`, etc. (e.g. vector dimensionality, iterations), as running the scripts on the full parameter set may take several days and require a large amount of disk space.
 
 ### Important Changes
 

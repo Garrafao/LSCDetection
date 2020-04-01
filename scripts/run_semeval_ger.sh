@@ -7,8 +7,8 @@ if [ ! -d corpora/semeval2020_ulscd_ger ];
 then
     mkdir -p corpora/semeval2020_ulscd_ger/corpus1/
     mkdir -p corpora/semeval2020_ulscd_ger/corpus2/
-    scripts/preprocess.sh testsets/semeval2020_ulscd_ger/corpus1/lemma/ corpora/semeval2020_ulscd_ger/corpus1/corpus1_preprocessed.txt 42
-    scripts/preprocess.sh testsets/semeval2020_ulscd_ger/corpus2/lemma/ corpora/semeval2020_ulscd_ger/corpus2/corpus2_preprocessed.txt 43
+    scripts/preprocess.sh testsets/semeval2020_ulscd_ger/corpus1/lemma/ corpora/semeval2020_ulscd_ger/corpus1/corpus1_preprocessed.txt 39
+    scripts/preprocess.sh testsets/semeval2020_ulscd_ger/corpus2/lemma/ corpora/semeval2020_ulscd_ger/corpus2/corpus2_preprocessed.txt 39
     gzip corpora/semeval2020_ulscd_ger/corpus1/*
     gzip corpora/semeval2020_ulscd_ger/corpus2/*
 fi

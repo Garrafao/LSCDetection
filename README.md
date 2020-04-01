@@ -118,6 +118,8 @@ Find detailed notes on model performances and optimal parameter settings in [the
 
 The evaluation framework of this repository is based on the comparison of a set of target words across two corpora. Hence, models can be evaluated on a triple (dataset, corpus1, corpus2), where the dataset provides gold values for the change of target words between corpus1 and corpus2.
 
+#### Datasets
+
 | Dataset | Language | Corpus 1 | Corpus 2 | Download | Comment |
 | --- | --- | --- | --- | --- | --- |
 | DURel | German | DTA18 | DTA19  | [Dataset](https://www.ims.uni-stuttgart.de/data/durel), [Corpora](https://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/wocc) | - version from Schlechtweg et al. (2019) at `testsets/durel/` |
@@ -134,10 +136,10 @@ We provide several evaluation pipelines, downloading the corpora and evaluating 
 
 |Name | Code | Applicability | Comment |
 | --- | --- | --- | --- |
-| Spearman correlation | `evaluation/spr.py` | DURel, SURel, SemCor LSC | - outputs rho (column 3) and p-value (column 4) |
-| Average Precision | `evaluation/ap.py` | SemCor LSC | - outputs AP (column 3) and random baseline (column 4) |
+| Spearman correlation | `evaluation/spr.py` | DURel, SURel, SemCor LSC, SemEval* | - outputs rho (column 3) and p-value (column 4) |
+| Average Precision | `evaluation/ap.py` | SemCor LSC, SemEval* | - outputs AP (column 3) and random baseline (column 4) |
 
-Consider uploading your results for DURel as a submission to the shared task [Lexical Semantic Change Detection in German](https://codalab.lri.fr/competitions/560).
+Consider uploading your results for DURel as a submission to the shared task [Lexical Semantic Change Detection in German](https://codalab.lri.fr/competitions/560) and for SemEval* to [SemEval 2020 Task 1: Unsupervised Lexical Semantic Change Detection ](https://languagechange.org/semeval).
 
 #### Pipeline
 

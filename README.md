@@ -158,8 +158,9 @@ We also provide a script for each dataset running all the models on it including
 	bash -e scripts/run_durel.sh
 	bash -e scripts/run_surel.sh
 	bash -e scripts/run_semcor.sh
+	bash -e scripts/run_semeval*.sh
 
-As is the scripts will reproduce the results from Schlechtweg et al. (2019) and Schlechtweg & Schulte im Walde (2020). You may want to change the parameters in `scripts/parameters_durel.sh`, etc. (e.g. vector dimensionality, iterations), as running the scripts on the full parameter set may take several days and require a large amount of disk space.
+You may want to change the parameters e.g. in `scripts/parameters_durel.sh`, etc. (e.g. vector dimensionality, iterations), as running the scripts on the full parameter set may take several days and require a large amount of disk space.
 
 ### Important Changes
 

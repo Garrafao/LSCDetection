@@ -10,7 +10,7 @@
   * [Evaluation](#evaluation)
     + [Datasets](#datasets)
     + [Metrics](#metrics)
-    + [Pipelines](#pipeline)
+    + [Pipelines](#pipelines)
   * [Important Changes](#important-changes)
   * [Error Sources](#error-sources)
   * [BibTex](#bibtex)

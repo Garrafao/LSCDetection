@@ -168,6 +168,13 @@ class Space(object):
         l2norm[l2norm==0.0] = 1.0 # Convert 0 values to 1
         self.matrix = csr_matrix(self.matrix/l2norm.reshape(len(l2norm),1))
 
+    def mean_center(self):
+        '''
+        Mean center all columns in the matrix.
+        '''
+        avg = np.mean(self.matrix, axis = 0)
+        self.matrix = csr_matrix(self.matrix - avg)
+        
 
 def array_to_csr_diagonal(array_):
     #array_ can't be a sparse matrix, if it is dense, it has to be a row matrix

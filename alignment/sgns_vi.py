@@ -66,7 +66,7 @@ def main():
     # Train
     sentences = PathLineSentences(corpDir)
     model.train(sentences, total_examples=model.corpus_count, epochs=model.epochs)
-    
+
     if is_len:
         # L2-normalize vectors
         model.init_sims(replace=True)

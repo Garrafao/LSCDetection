@@ -130,8 +130,8 @@ The evaluation framework of this repository is based on the comparison of a set 
 | SemEval Ger | German | DTA 1800-1899 | BZND 1946-1990 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 | SemEval Lat | Latin | LatinISE -200-0 | LatinISE 0-2000 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 | SemEval Swe | Swedish | Kubhist2 1790-1830 | Kubhist2 1895-1903 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
-| RuSemShift1 | Russian | <1917 | 1917-1991 | [Dataset](https://github.com/juliarodina/RuSemShift) | |
-| RuSemShift2 | Russian | 1917-1991 |  >1991 | [Dataset](https://github.com/juliarodina/RuSemShift) | |
+| RuSemShift1 | Russian | 1682-1916 | 1918-1990 | [Dataset](https://github.com/juliarodina/RuSemShift) | |
+| RuSemShift2 | Russian | 1918-1990 | 1991-2016 | [Dataset](https://github.com/juliarodina/RuSemShift) | |
 
 We provide several evaluation pipelines, downloading the corpora and evaluating the models on (most of) the above-mentioned datasets, see [pipelines](#pipelines).
 

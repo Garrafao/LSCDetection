@@ -194,7 +194,7 @@ BibTex
 @inproceedings{SchlechtwegWalde20,
 	title = {{Simulating Lexical Semantic Change from Sense-Annotated Data}},
 	author = {Dominik Schlechtweg and Sabine {Schulte im Walde}},
-	year = {2020}
+	year = {2020},
 	booktitle = {{The Evolution of Language: Proceedings of the 13th International Conference (EvoLang13)}},
 	editor = {Ravignani, A. and Barbieri, C. and Martins, M. and Flaherty, M. and Jadoul, Y. and Lattenkamp, E. and Little, H. and Mudd, K. and Verhoef, T.},
 	url = {http://brussels.evolang.org/proceedings/paper.html?nr=9},

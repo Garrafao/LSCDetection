@@ -51,7 +51,7 @@ def main():
         
     # Save the matrix
     if is_w2v:
-        space.save(outpath, format='w2v')
+        space.save(outPath, format='w2v')
     else:
         space.save(outPath)
 

@@ -16,17 +16,19 @@ def main():
     args = docopt('''Mean center matrix.
 
     Usage:
-        center.py [-l] <matrixPath> <outPath>
+        center.py [-l] [-w] <matrixPath> <outPath>
 
         <matrixPath> = path to matrix
         <outPath> = output path for space
 
     Options:
         -l, --len   normalize vectors to unit length before centering
+        -w, --w2v   save in word2vec format
 
     ''')
 
     is_len = args['--len']
+    is_w2v = args['--len']
     matrixPath = args['<matrixPath>']
     outPath = args['<outPath>']
 
@@ -48,7 +50,10 @@ def main():
     space.mean_center()
         
     # Save the matrix
-    space.save(outPath)
+    if is_w2v:
+        space.save(outpath, format='w2v')
+    else:
+        space.save(outPath)
 
     logging.info("--- %s seconds ---" % (time.time() - start_time))                   
 

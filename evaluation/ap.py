@@ -44,33 +44,30 @@ def main():
     with open(classFile, 'r', encoding='utf-8') as f_in:
         classes = [float(line.strip()) for line in f_in]
     
-    # Get predictions        
+    # Get predictions
     with open(resultFile, 'r', encoding='utf-8') as f_in:
-        target2values = {line.strip().split('\t')[0]:float(line.strip().split('\t')[1]) for line in f_in}
-        
-    target2class = {target:classes[i] for i, target in enumerate(target2values)}
+        target2values = [float(line.strip().split('\t')[1]) for line in f_in]
 
     # Read in values, exclude nan and targets not present in resultFile
-    gold = np.array([target2class[target] for (target, value) in target2values.items() if not np.isnan(value)])
-    values = np.array([value for (target, value) in target2values.items() if not np.isnan(value)])
-    targets = np.array([target for (target, value) in target2values.items() if not np.isnan(value)])
+    values = [v for v in target2values if not np.isnan(v)]
+    gold = [c for i, c in enumerate(classes) if not np.isnan(target2values[i])]
 
-    if len(classes)!=len(list(gold)):
+    if len(target2values) != len(values):
         print('nan encountered!')
         
     # Compute average precision
     try:
         ap = average_precision_score(gold, values)
-        mc = Counter(gold)[1.0]
-        rb = mc/len(gold) # approximate random baseline
+        mc = Counter(classes)[1.0]
+        rb = mc/len(classes)  # approximate random baseline
     except IndexError as e:
         logging.info(e)
         ap, rb = float('nan'), float('nan')
-    
+
     print('\t'.join((classFileName, resultFileName, str(ap), str(rb))))
-    
-    logging.info("--- %s seconds ---" % (time.time() - start_time))                   
- 
+
+    logging.info("--- %s seconds ---" % (time.time() - start_time))
+
 
 if __name__ == "__main__":
     main()

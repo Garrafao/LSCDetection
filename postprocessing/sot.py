@@ -47,7 +47,7 @@ def main():
         space.l2_normalize()
 
     # Similarity matrix   
-    space.sim(alpha)
+    space.transform_similarity_order(alpha)
     
     # Save the matrix
     space.save(outPath, format="w2v")

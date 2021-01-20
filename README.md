@@ -3,9 +3,11 @@
   * [General](#general)
   * [Usage](#usage)
   * [Models](#models)
+    + [Pre-Training](#pre-training)
     + [Semantic Representations](#semantic-representations)
     + [Alignment](#alignment)
     + [Measures](#measures)
+    + [Post-Processing](#post-processing)
   * [Parameter Settings](#parameter-settings)
   * [Evaluation](#evaluation)
     + [Datasets](#datasets)
@@ -79,7 +81,7 @@ To learn more about how matrices are loaded and stored check out `modules/utils_
 
 The scripts assume a corpus format of one sentence per line in UTF-8 encoded (optionally zipped) text files. You can specify either a file path or a folder. In the latter case the scripts will iterate over all files in the folder.
 
-#### Pre-training
+#### Pre-Training
 
 #### Semantic Representations
 

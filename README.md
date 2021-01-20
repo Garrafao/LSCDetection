@@ -83,6 +83,10 @@ The scripts assume a corpus format of one sentence per line in UTF-8 encoded (op
 
 #### Pre-Training
 
+Pre-training can be utilzed when working with small target corpora or if additional semantic information, not contained in the target corpus, is desired.
+
+To pre-train SGNS models use `representations/sgns.py` to create embeddings on the chosen pre-training corpus (saved as a .model file). Afterwards `alignment/sgns_vi.py` or `alignment/sgns_vi_l2normalize.py` may be used to refine the pre-trained model on the target corpus. See [Alignment](#alignment) for differences between the two scripts.
+
 #### Semantic Representations
 
 |Name | Code | Type | Comment |
@@ -104,6 +108,7 @@ Table: VSM=Vector Space Model, TPM=Topic Model
 | SRV | `alignment/srv_align.py` | RI | - consider using more powerful [TRIPY](https://github.com/Garrafao/TRIPY) |
 | OP | `alignment/map_embeddings.py` | SVD, RI, SGNS | - drawn from [VecMap](https://github.com/artetxem/vecmap) <br> - for OP- and OP+ see `scripts/` |
 | VI | `alignment/sgns_vi.py` | SGNS | - bug fixes 27/12/19 (see script for details) |
+|  | `alignment/sgns_vi_l2normalize.py` | SGNS | - additional length normalization between initialization and training, improvments over VI detailed in [Kaiser et al. 2021](#bibtex) |
 | WI | `alignment/wi.py` | Count, PPMI, SVD, RI, SGNS | - consider using the more advanced [Temporal Referencing](https://github.com/Garrafao/TemporalReferencing) |
 
 #### Measures

@@ -77,6 +77,8 @@ To learn more about how matrices are loaded and stored check out `modules/utils_
 
 The scripts assume a corpus format of one sentence per line in UTF-8 encoded (optionally zipped) text files. You can specify either a file path or a folder. In the latter case the scripts will iterate over all files in the folder.
 
+#### Pre-training
+
 #### Semantic Representations
 
 |Name | Code | Type | Comment |
@@ -110,6 +112,11 @@ Table: VSM=Vector Space Model, TPM=Topic Model
 | FD | `measures/freq.py` | from corpus | - log-transform with `measures/trsf.py` <br> - get difference with `measures/diff.py` |
 | TD | `measures/typs.py` | Count | as above |
 | HD | `measures/entropy.py` | Count | as above |
+
+#### Post-Processing
+
+| SOT | ... |
+| MC+PCR | ...|
 
 ### Parameter Settings
 
@@ -199,5 +206,15 @@ BibTex
 	editor = {Ravignani, A. and Barbieri, C. and Martins, M. and Flaherty, M. and Jadoul, Y. and Lattenkamp, E. and Little, H. and Mudd, K. and Verhoef, T.},
 	url = {http://brussels.evolang.org/proceedings/paper.html?nr=9},
 	doi = {10.17617/2.3190925}
+}
+```
+```
+@inproceedings{Kaiser2021effects,
+    title = "Effects of Pre- and Post-Processing in Lexical Semantic Change Detection",
+    author = "Kaiser, Jens and Kurtyigit, Sinan and Kotchourko, Serge and Schlechtweg, Dominik",
+    booktitle = "Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics",
+    year = "2021",
+    address = "Online",
+    publisher = "Association for Computational Linguistics"
 }
 ```

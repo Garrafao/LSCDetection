@@ -121,7 +121,7 @@ Table: VSM=Vector Space Model, TPM=Topic Model
 
 |Name    | Code | Applicability | Comment |
 | --- | --- | --- | --- |
-| SOT    | ... |  ... |  ... |
+| SOT    | `postprocessing/sot.py` |  VSM |  ... |
 | MC+PCR | ...|  ... |  ... |
 
 ### Parameter Settings

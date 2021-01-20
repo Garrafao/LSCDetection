@@ -9,7 +9,7 @@ from utils_ import Space
 
 def main():
     """
-    Mean center matrix.
+    Mean center matrix, depending on flag, and remove top n PCA components
     """
 
     # Get the arguments
@@ -20,7 +20,7 @@ def main():
 
         <matrixPath> = path to matrix
         <outPath> = output path for space
-        <threshold> = threshold
+        <threshold> = threshold, amount of PCA components
 
     Options:
         -m, --mean  flag, if mean centering should be applied
@@ -44,7 +44,7 @@ def main():
         space = Space(matrix_path, format='w2v')
         _format_flag = 'w2v'
 
-    # PPA
+    # MC+PCR
     space.mc_pcr(int(threshold), is_mean)
 
     # Save the matrix

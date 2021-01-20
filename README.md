@@ -20,9 +20,11 @@
 
 Data Sets and Models for Evaluation of Lexical Semantic Change Detection.
 
-If you use this software for academic research, please [cite](#bibtex) this paper:
+If you use this software for academic research, please [cite](#bibtex) these papers:
 
 - Dominik Schlechtweg, Anna Hätty, Marco del Tredici, and Sabine Schulte im Walde. 2019. [A Wind of Change: Detecting and Evaluating Lexical Semantic Change across Times and Domains](https://www.aclweb.org/anthology/papers/P/P19/P19-1072/). In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics, pages 732-746, Florence, Italy. ACL.
+
+- Jens Kaiser, Sinan Kurtyigit, Serge Kotchourko, Dominik Schlechtweg. 2021. Effects of Pre- and Post-Processing in Lexical Semantic Change Detection. In Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics.
 
 Also make sure you give appropriate credit to the below-mentioned software this repository depends on.
 
@@ -115,8 +117,10 @@ Table: VSM=Vector Space Model, TPM=Topic Model
 
 #### Post-Processing
 
-| SOT | ... |
-| MC+PCR | ...|
+|Name    | Code | Applicability | Comment |
+| --- | --- | --- | --- |
+| SOT    | ... |  ... |  ... |
+| MC+PCR | ...|  ... |  ... |
 
 ### Parameter Settings
 

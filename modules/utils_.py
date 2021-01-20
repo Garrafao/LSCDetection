@@ -174,6 +174,16 @@ class Space(object):
         '''
         avg = np.mean(self.matrix, axis = 0)
         self.matrix = csr_matrix(self.matrix - avg)
+
+    def transform_similarity_order(self, alpha):
+        '''
+        Create higher order similarity matrix.
+        '''
+        transpo_mat = (self.matrix.transpose().dot(self.matrix)).toarray()
+        l,q = np.linalg.eigh(transpo_mat)
+        w = q*(l**alpha)
+        w = csr_matrix(w)
+        self.matrix = self.matrix.dot(w)
         
 
 def array_to_csr_diagonal(array_):

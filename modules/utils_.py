@@ -1,6 +1,7 @@
 import pickle
 from scipy.sparse import csr_matrix, load_npz, save_npz, spdiags, linalg
 import numpy as np
+from sklearn.decomposition import PCA
 import logging
 
 class Space(object):
@@ -184,6 +185,29 @@ class Space(object):
         w = q*(l**alpha)
         w = csr_matrix(w)
         self.matrix = self.matrix.dot(w)
+
+    def mc_pcr(self, threshold: int, mean_centering_f: bool = True):
+        """
+        Remove top n PCA components. 
+        If this is done on a centered matrix depends on the flag.
+
+        Args:
+            :threshold: number of components to be removed
+            :mean_centering_f: flag, if mean centering should be done. Normaly set
+        """
+        pca = PCA(n_components=threshold)
+
+        _tmp_matrix = self.matrix
+
+        if mean_centering_f:
+            _tmp_matrix = csr_matrix(self.matrix - np.mean(self.matrix, axis=0))
+
+        pca.fit_transform(_tmp_matrix.toarray())
+        pca_components = csr_matrix(pca.components_)
+
+        _sum = csr_matrix(csr_matrix(self.matrix * pca_components.transpose()) * pca_components)
+        self.matrix = csr_matrix(_tmp_matrix - _sum)
+
         
 
 def array_to_csr_diagonal(array_):

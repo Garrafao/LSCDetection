@@ -14,7 +14,7 @@ def main():
     Make comparable embedding vector spaces with Skip-Gram with Negative Sampling as described in:
     
        Yoon Kim, Yi-I. Chiu, Kentaro Hanaki, Darshan Hegde, and Slav Petrov. 2014. Temporal analysis of language through neural language models. arXiv preprint arXiv:1405.3515.
-       Additionally a length normalization step is performed on all word vectors after initializing on the provided model (before the training step). This has proven to be effective at reducing the frequency bias. 
+       Additionally a length normalization step is performed on all word vectors after initializing on the provided model (before the training step), context vectors stay unchanged. This has proven to be effective at reducing the frequency bias. 
        Jens Kaiser, Sinan Kurtyigit, Serge Kotchourko, Dominik Schlechtweg. 2021. Effects of Pre- and Post-Processing in Lexical Semantic Change Detection. In Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics. 
     
     """

@@ -7,6 +7,7 @@ import time
 import gensim
 from gensim.models.word2vec import PathLineSentences
 from gensim.models import Word2Vec
+import numpy as np
 
 
 def main():

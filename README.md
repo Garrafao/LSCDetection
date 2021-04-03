@@ -148,8 +148,12 @@ The evaluation framework of this repository is based on the comparison of a set 
 | SemEval Ger | German | DTA 1800-1899 | BZND 1946-1990 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 | SemEval Lat | Latin | LatinISE -200-0 | LatinISE 0-2000 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
 | SemEval Swe | Swedish | Kubhist2 1790-1830 | Kubhist2 1895-1903 | [Dataset](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd), [Corpora](https://www.ims.uni-stuttgart.de/data/sem-eval-ulscd) | |
-| RuSemShift1 | Russian | RNC 1682-1916 | RNC 1918-1990 | [Dataset](https://github.com/juliarodina/RuSemShift) | |
-| RuSemShift2 | Russian | RNC 1918-1990 | RNC 1991-2016 | [Dataset](https://github.com/juliarodina/RuSemShift) | |
+| RuSemShift1 | Russian | RNC 1682-1916 | RNC 1918-1990 | [Dataset](https://github.com/juliarodina/RuSemShift), [Corpora](https://rusvectores.org/static/corpora/) | |
+| RuSemShift2 | Russian | RNC 1918-1990 | RNC 1991-2016 | [Dataset](https://github.com/juliarodina/RuSemShift), [Corpora](https://rusvectores.org/static/corpora/) | |
+| RuShiftEval1 | Russian | RNC 1682-1916 | RNC 1918-1990 | [Dataset](https://github.com/akutuzov/rushifteval_public), [Corpora](https://rusvectores.org/static/corpora/) | |
+| RuShiftEval2 | Russian | RNC 1918-1990 | RNC 1991-2016 | [Dataset](https://github.com/akutuzov/rushifteval_public), [Corpora](https://rusvectores.org/static/corpora/) | |
+| RuShiftEval3 | Russian | RNC 1682-1916 | RNC 1991-2016 | [Dataset](https://github.com/akutuzov/rushifteval_public), [Corpora](https://rusvectores.org/static/corpora/) | |
+| DIACR-Ita | Italian | Unità 1945-1970 | Unità 1990-2014 | [Dataset](https://github.com/diacr-ita/data/tree/master/test), [Corpora](https://github.com/swapUniba/unita/) | |
 
 We provide several evaluation pipelines, downloading the corpora and evaluating the models on (most of) the above-mentioned datasets, see [pipelines](#pipelines).
 
@@ -157,10 +161,10 @@ We provide several evaluation pipelines, downloading the corpora and evaluating 
 
 |Name | Code | Applicability | Comment |
 | --- | --- | --- | --- |
-| Spearman correlation | `evaluation/spr.py` | DURel, SURel, SemCor LSC, SemEval* | - outputs rho (column 3) and p-value (column 4) |
-| Average Precision | `evaluation/ap.py` | SemCor LSC, SemEval* | - outputs AP (column 3) and random baseline (column 4) |
+| Spearman correlation | `evaluation/spr.py` | DURel, SURel, SemCor LSC, SemEval*, Ru\* | - outputs rho (column 3) and p-value (column 4) |
+| Average Precision | `evaluation/ap.py` | SemCor LSC, SemEval*, DIACR-Ita | - outputs AP (column 3) and random baseline (column 4) |
 
-Consider uploading your results for DURel as a submission to the shared task [Lexical Semantic Change Detection in German](https://codalab.lri.fr/competitions/560) and for SemEval* to [SemEval 2020 Task 1: Unsupervised Lexical Semantic Change Detection ](https://languagechange.org/semeval).
+Consider uploading your results for DURel as a submission to the shared task [Lexical Semantic Change Detection in German](https://codalab.lri.fr/competitions/560), for SemEval* to [SemEval 2020 Task 1: Unsupervised Lexical Semantic Change Detection ](https://languagechange.org/semeval) and for RuShiftEval to [RuShiftEval](https://competitions.codalab.org/competitions/28340).
 
 #### Pipelines
 

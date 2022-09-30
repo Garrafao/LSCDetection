@@ -8,7 +8,7 @@ docutils==0.15.2
 gensim==3.8.0
 idna==2.8
 jmespath==0.9.4
-joblib==0.13.2
+joblib==1.2.0
 numpy==1.17.1
 python-dateutil==2.8.0
 requests==2.22.0
